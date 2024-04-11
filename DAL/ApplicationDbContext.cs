@@ -1,13 +1,12 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Domain.Entity;
-using System.Reflection;
 using Microsoft.Extensions.Logging;
+using System.Reflection;
 
 namespace DAL
 {
-    internal class ApplicationDbCotext : DbContext
+    public class ApplicationDbContext : DbContext
     {
-        public ApplicationDbCotext(DbContextOptions<ApplicationDbCotext> options) : base(options)
+        public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
         {
         }
 
