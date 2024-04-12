@@ -11,10 +11,11 @@ namespace DAL.DependencyInjection
     {
         public static void AddDataAccessLayer(this IServiceCollection services, IConfiguration configuration)
         {
-            var connectionString = configuration.GetConnectionString("MSSql");
+            var connectionString = configuration.GetConnectionString("SlqServer");
             services.AddDbContext<ApplicationDbContext>(options =>
             {
-                options.UseSqlServer(connectionString,b => b.MigrationsAssembly("Domain"));
+                options.UseSqlServer(connectionString, b => b.MigrationsAssembly("DAL"));
+
             });
             services.InitRepositories();
 
