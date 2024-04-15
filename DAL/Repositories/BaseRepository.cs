@@ -11,12 +11,13 @@ namespace DAL.Repositories
             _context = context;
         }
 
-        public async Task<TEntity> CreateAsync(TEntity entity)
+        public Task<TEntity> CreateAsync(TEntity entity)
         {
             if (entity == null)
                 throw new ArgumentNullException("Entity is null");
-            await _context.AddAsync(entity);
-            return entity;
+             _context.AddAsync(entity);
+             _context.SaveChangesAsync();
+            return Task.FromResult(entity);
         }
 
         public IQueryable<TEntity> GetAll()
@@ -25,25 +26,22 @@ namespace DAL.Repositories
 
         }
 
-        public void Remove(TEntity entity)
+        public Task<TEntity> RemoveAsync(TEntity entity)
         {
             if (entity == null)
                 throw new ArgumentNullException("Entity is null");
             _context.Remove(entity);
-
+            _context.SaveChangesAsync();
+            return Task.FromResult(entity);
         }
 
-        public async Task<int> SaveChangesAsync()
-        {
-            return await _context.SaveChangesAsync();
-        }
-
-        public TEntity Update(TEntity entity)
+        public Task<TEntity> UpdateAsync(TEntity entity)
         {
             if (entity == null)
                 throw new ArgumentNullException("Entity is null");
             _context.Update(entity);
-            return entity;
+            _context.SaveChangesAsync();
+            return Task.FromResult(entity);
         }
     }
 }

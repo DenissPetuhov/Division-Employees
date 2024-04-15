@@ -4,8 +4,7 @@
     {
         IQueryable<TEntity> GetAll();
         Task<TEntity> CreateAsync(TEntity entity);
-        TEntity Update(TEntity entity);
-        void Remove(TEntity entity);    
-        Task<int> SaveChangesAsync();
+        Task<TEntity> UpdateAsync(TEntity entity);
+        Task<TEntity> RemoveAsync(TEntity entity);    
     }
 }

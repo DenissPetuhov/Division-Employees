@@ -7,10 +7,7 @@ namespace DAL
 {
     public class ApplicationDbContext : DbContext
     {
-       //ublic DbSet<Employee> employees { get; set; }
-        public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
-        {
-        }
+        public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options) { }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {

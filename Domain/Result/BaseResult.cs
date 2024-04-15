@@ -22,6 +22,6 @@ namespace Domain.Result
             Data = data;
         }
         public BaseResult() { }
-        public T Data { get; set; }
+        public T? Data { get; set; }
     }
 }
