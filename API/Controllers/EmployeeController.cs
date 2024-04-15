@@ -37,11 +37,6 @@ namespace API.Controllers
             return BadRequest(response);
         }
 
-        //[HttpPut("GetDivisionById id={divisionId}")]
-        //public async Task<ActionResult<BaseResult<Employee>>> PutCreateEmployee()
-        //{
-        //    var response = await _employeeService.
-        //}
 
     }
 }

@@ -22,7 +22,7 @@ namespace Domain.Interface.Services
         /// </summary>
         /// <param name="divisionDto"></param>
         /// <returns></returns>
-        Task<BaseResult<DivisionDto>> CreateDivisionAsync(DivisionDto division);
+        Task<BaseResult<DivisionDto>> CreateDivisionAsync(CreateDivisionDto division);
         /// <summary>
         /// Обновить отдел
         /// </summary>

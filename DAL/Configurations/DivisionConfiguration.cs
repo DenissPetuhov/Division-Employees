@@ -13,8 +13,8 @@ namespace Domain.Entity.Configurations
 
             builder.HasMany(x => x.Employees)
                 .WithOne(x => x.Division)
-                .HasForeignKey(x => x.EmployeeId)
-                .HasPrincipalKey(x => x.DivisionId);
+                .HasForeignKey(x => x.DivisionId).IsRequired();
+                
 
             builder.HasData(new Division()
             {

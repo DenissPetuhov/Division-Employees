@@ -15,7 +15,7 @@ namespace Domain.Entity.Configurations
             builder.Property(x => x.Gender).HasMaxLength(50);
             builder.Property(x => x.Division).IsRequired();
             builder.Property(x => x.BirthDay).IsRequired();
-
+            builder.Property(x => x.DivisionId).IsRequired();
 
             builder.HasData(
                 new Employee()
@@ -35,7 +35,7 @@ namespace Domain.Entity.Configurations
                     LastName = "Петрович",
                     Position = "Maffiosnic",
                     BirthDay = DateTime.UtcNow
-                }); 
+                });
 
 
         }

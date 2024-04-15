@@ -3,7 +3,7 @@
 namespace Domain.Dto
 {
     public record class EmployeeDto(int EmployeeId, string FirstName, string SecondName,
-        string LastName, DateTime BirthDay, string Gender, string Position, bool DriverLicense, int divisionId);
+        string LastName, DateTime BirthDay);
 
     public record class CreateEmployeeDto(string FirstName, string SecondName,
        string LastName, DateTime BirthDay, int divisionId);

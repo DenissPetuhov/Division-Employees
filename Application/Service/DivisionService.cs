@@ -20,12 +20,13 @@ namespace Application.Service
             _mapper = mapper;
         }
 
-        public async Task<BaseResult<DivisionDto>> CreateDivisionAsync(DivisionDto divisiondto)
+        public async Task<BaseResult<DivisionDto>> CreateDivisionAsync(CreateDivisionDto divisiondto)
         {
             var response = new BaseResult<DivisionDto>();
             try
             {
                 var division = _mapper.Map<Division>(divisiondto);
+                division.DateCreate = DateTime.Now;
                 var responseDivision = await _divisionService.CreateAsync(division);
                 response.Data = _mapper.Map<DivisionDto>(responseDivision);
                 return response;
