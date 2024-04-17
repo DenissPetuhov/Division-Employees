@@ -21,7 +21,6 @@ namespace Application.Service
             _divisionService = divisionService;
             _mapper = mapper;
         }
-
         public async Task<BaseResult<EmployeeDto>> GetEmployeeAsync(int employeeId)
         {
             var response = new BaseResult<EmployeeDto>();
