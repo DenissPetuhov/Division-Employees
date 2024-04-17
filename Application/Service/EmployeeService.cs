@@ -28,7 +28,7 @@ namespace Application.Service
             {
                 response.Data = await _employeeService.GetAll()
                     .Select(x => _mapper.Map<EmployeeDto>(x))
-                    .FirstOrDefaultAsync(x => x.EmployeeId == employeeId);
+                    .FirstOrDefaultAsync(x => x.Id == employeeId);
                 return response;
             }
             catch (Exception ex)
@@ -101,11 +101,11 @@ namespace Application.Service
             var response = new BaseResult<EmployeeDto>();
             try
             {
-                var data = await _employeeService.GetAll().FirstOrDefaultAsync(x => x.Id == employee.EmployeeId);
+                var data = await _employeeService.GetAll().FirstOrDefaultAsync(x => x.Id == employee.Id);
                 if (data == null)
                 {
                     response.ErrorCode = (int)ErrorCode.NoDataFound;
-                    response.ErrorMessage = $"Работник по заданному id={employee.EmployeeId} не найден.";
+                    response.ErrorMessage = $"Работник по заданному id={employee.Id} не найден.";
                     return response;
                 }
                 var responsedata = await _employeeService.UpdateAsync(data);
@@ -118,7 +118,7 @@ namespace Application.Service
                 return new BaseResult<EmployeeDto>
                 {
                     ErrorCode = (int)ErrorCode.ServiceError,
-                    ErrorMessage = ex.Message,
+                    ErrorMessage = ex.Message
                 };
             }
         }
@@ -147,7 +147,7 @@ namespace Application.Service
                 return new BaseResult<EmployeeDto>
                 {
                     ErrorCode = (int)ErrorCode.ServiceError,
-                    ErrorMessage = ex.Message,
+                    ErrorMessage = ex.Message
                 };
             }
 

@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Azure;
 using Domain.Dto;
 using Domain.Entity;
 using Domain.Enums;
@@ -25,6 +26,7 @@ namespace Application.Service
             var response = new BaseResult<DivisionDto>();
             try
             {
+
                 var division = _mapper.Map<Division>(divisiondto);
                 division.DateCreate = DateTime.Now;
                 var responseDivision = await _divisionService.CreateAsync(division);
@@ -37,11 +39,10 @@ namespace Application.Service
                 return new BaseResult<DivisionDto>
                 {
                     ErrorCode = (int)ErrorCode.ServiceError,
-                    ErrorMessage = ex.Message,
+                    ErrorMessage = ex.Message
                 };
             }
         }
-
         public async Task<BaseResult<DivisionDto>> DeleteDivisionAsync(int divisionId)
         {
             var response = new BaseResult<DivisionDto>();
@@ -71,7 +72,6 @@ namespace Application.Service
                 };
             }
         }
-
         public async Task<CollectionResult<DivisionDto>> GetAllDivisionsAsync()
         {
             var response = new CollectionResult<DivisionDto>();
@@ -98,7 +98,6 @@ namespace Application.Service
                 };
             }
         }
-
         public async Task<BaseResult<DivisionDto>> GetDivisionAsync(int divisionId)
         {
             var response = new BaseResult<DivisionDto>();
@@ -106,7 +105,7 @@ namespace Application.Service
             {
                 var data = await _divisionService.GetAll()
                     .Select(x => _mapper.Map<DivisionDto>(x))
-                    .FirstOrDefaultAsync(x => x.DivisionId == divisionId);
+                    .FirstOrDefaultAsync(x => x.Id == divisionId);
                 if (data == null)
                 {
                     response.ErrorCode = (int)ErrorCode.NoDataFound;
@@ -127,17 +126,16 @@ namespace Application.Service
                 };
             }
         }
-
         public async Task<BaseResult<DivisionDto>> UpdateDivisionAsync(DivisionDto division)
         {
             var response = new BaseResult<DivisionDto>();
             try
             {
-                var data = await _divisionService.GetAll().FirstOrDefaultAsync(x => x.Id == division.DivisionId);
+                var data = await _divisionService.GetAll().FirstOrDefaultAsync(x => x.Id == division.Id);
                 if (data == null)
                 {
                     response.ErrorCode = (int)ErrorCode.NoDataFound;
-                    response.ErrorMessage = $"Отдел по заданному id={division.DivisionId} не найден.";
+                    response.ErrorMessage = $"Отдел по заданному id={division.Id} не найден.";
                     return response;
                 }
                 var responsedata = await _divisionService.UpdateAsync(data);
@@ -154,6 +152,67 @@ namespace Application.Service
                 };
             }
         }
+        private BaseResult<Division> CheckRecursionDivision(Division division, List<int> idList)
+        {
+            var response = new BaseResult<Division>();
+            if (division.ParentDivision is null)
+            {
+                response.Data = division;
+                return response;
+            }
 
+            foreach (var item in idList)
+            {
+                if (item == division.Id)
+                {
+                    response.ErrorMessage = "Зависимость рекурсивна";
+                    return response;
+                }
+
+            }
+            idList.Add(division.Id);
+
+            return CheckRecursionDivision(division.ParentDivision, idList);
+        }
+        private Division GetEntityDivision(int divisionId)
+        {
+            var response = _divisionService.GetAll().FirstOrDefault(x => x.Id == divisionId);
+            if (response is null)
+            {
+                throw new NullReferenceException();
+            }
+            return response;
+        }
+        public async Task<BaseResult> AddParentDivision(AddParentDivisionDto addParentDivisionDto)
+        {
+            try
+            {
+                var division = GetEntityDivision(addParentDivisionDto.Id);
+                var parentDivision = GetEntityDivision(addParentDivisionDto.ParentDivisionId);
+                division.ParentDivision = parentDivision;
+                var result = CheckRecursionDivision(division, new List<int>());
+                if (!result.isSuccses) return result;
+                await _divisionService.UpdateAsync(division);
+                return new BaseResult();
+
+            }
+            catch (NullReferenceException)
+            {
+                return new BaseResult
+                {
+                    ErrorCode = (int)ErrorCode.ServiceError,
+                    ErrorMessage = "Такой записи не существует"
+                };
+            }
+            catch (Exception ex)
+            {
+                return new BaseResult()
+                {
+                    ErrorCode = (int)ErrorCode.ServiceError,
+                    ErrorMessage = ex.Message
+                };
+            }
+
+        }
     }
 }

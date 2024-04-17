@@ -2,11 +2,12 @@
 
 namespace Domain.Dto
 {
-    public record class EmployeeDto(int EmployeeId, string FirstName, string SecondName,
+    public record class EmployeeDto(int Id, string FirstName, string SecondName,
         string LastName, DateTime BirthDay);
 
     public record class CreateEmployeeDto(string FirstName, string SecondName,
        string LastName, DateTime BirthDay, int divisionId);
+
     //{
     //    public int EmployeeId { get; set; }
     //    public string FirstName { get; set; }

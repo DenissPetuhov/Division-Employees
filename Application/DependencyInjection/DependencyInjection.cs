@@ -11,7 +11,7 @@ namespace DAL.DependencyInjection
         {
 
             services.InitServices();
-            
+       
 
         }
         public static void InitServices(this IServiceCollection services)
@@ -19,10 +19,10 @@ namespace DAL.DependencyInjection
             services.AddScoped<IEmployeeService, EmployeeService>();
             services.AddScoped<IDivisionService, DivisionService>();
             services.AddHostedService<MigrationsHostedService>();
-            services.AddAutoMapper(typeof(DivisionMapping));
-            services.AddAutoMapper(typeof(EmployeeMapping));
+            services.AddAutoMapper(typeof(DivisionMapping), typeof(EmployeeMapping));
 
         }
+
 
     }
 }

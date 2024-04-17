@@ -26,6 +26,10 @@ namespace Domain.Interface.Services
         /// Удалить отдел
         /// </summary>
         Task<BaseResult<DivisionDto>> DeleteDivisionAsync(int divisionId);
+        /// <summary>
+        /// Добавить родительский отдел
+        /// </summary>
+        Task<BaseResult> AddParentDivision(AddParentDivisionDto addParentDivisionDto);
 
     }
 }

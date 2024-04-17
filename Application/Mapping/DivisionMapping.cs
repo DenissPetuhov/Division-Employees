@@ -6,9 +6,11 @@ namespace Application.Mapping
 {
     public class DivisionMapping : Profile
     {
-        protected DivisionMapping()
+        public DivisionMapping()
         {
             CreateMap<Division, DivisionDto>().ReverseMap();
+            CreateMap<Division, CreateDivisionDto>().ReverseMap();
+            CreateMap<Division, AddParentDivisionDto>().ReverseMap();
         }
     }
 }

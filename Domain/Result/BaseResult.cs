@@ -9,7 +9,7 @@ namespace Domain.Result
     public class BaseResult
     {
         public bool isSuccses => ErrorMessage == null;
-        public string ErrorMessage { get; set; }
+        public string? ErrorMessage { get; set; }
         public int? ErrorCode { get; set; }
 
     }

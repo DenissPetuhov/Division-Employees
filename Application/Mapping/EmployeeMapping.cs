@@ -6,9 +6,10 @@ namespace Application.Mapping
 {
     public class EmployeeMapping : Profile
     {
-        protected EmployeeMapping()
+        public EmployeeMapping()
         {
             CreateMap<Employee, EmployeeDto>().ReverseMap();
+            CreateMap<Employee, CreateEmployeeDto>().ReverseMap();
         }
     }
 }
