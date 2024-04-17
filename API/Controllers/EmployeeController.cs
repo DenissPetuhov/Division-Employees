@@ -36,7 +36,26 @@ namespace API.Controllers
 
             return BadRequest(response);
         }
+        [HttpGet("GetAllDivision")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<ActionResult<CollectionResult<Division>>> GetAllDivision()
+        {
+            var response = await _divisionService.GetAllDivisionsAsync();
+            if (response.isSuccses) return Ok(response);
 
+            return BadRequest(response);
+        }
+        [HttpGet("GetEmployeeByDivisionId id={divisionId}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<ActionResult<CollectionResult<Division>>> GetEmployeeByDivisionId(int divisionId)
+        {
+            var response = await _employeeService.GetEmployeesToDvisionIdAsync(divisionId);
+            if (response.isSuccses) return Ok(response);
+
+            return BadRequest(response);
+        }
 
     }
 }
