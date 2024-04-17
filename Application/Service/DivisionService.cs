@@ -47,7 +47,7 @@ namespace Application.Service
             var response = new BaseResult<DivisionDto>();
             try
             {
-                var data = await _divisionService.GetAll().FirstOrDefaultAsync(x => x.DivisionId == divisionId);
+                var data = await _divisionService.GetAll().FirstOrDefaultAsync(x => x.Id == divisionId);
                 if (data == null)
                 {
                     response.ErrorCode = (int)ErrorCode.NoDataFound;
@@ -133,7 +133,7 @@ namespace Application.Service
             var response = new BaseResult<DivisionDto>();
             try
             {
-                var data = await _divisionService.GetAll().FirstOrDefaultAsync(x => x.DivisionId == division.DivisionId);
+                var data = await _divisionService.GetAll().FirstOrDefaultAsync(x => x.Id == division.DivisionId);
                 if (data == null)
                 {
                     response.ErrorCode = (int)ErrorCode.NoDataFound;

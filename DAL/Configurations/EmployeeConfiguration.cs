@@ -7,34 +7,50 @@ namespace Domain.Entity.Configurations
     {
         public void Configure(EntityTypeBuilder<Employee> builder)
         {
-            builder.Property(x => x.EmployeeId).ValueGeneratedOnAdd();
-            builder.Property(x => x.FirstName).HasMaxLength(50).IsRequired();
-            builder.Property(x => x.SecondName).HasMaxLength(50).IsRequired();
-            builder.Property(x => x.LastName).HasMaxLength(50).IsRequired();
+
+            builder.HasKey(x => x.Id);
+            builder.Property(x => x.Id).ValueGeneratedOnAdd();
+            builder.Property(x => x.FirstName).HasMaxLength(50)
+                .IsRequired();
+            builder.Property(x => x.SecondName).HasMaxLength(50)
+                .IsRequired();
+            builder.Property(x => x.LastName).HasMaxLength(50)
+                .IsRequired();
             builder.Property(x => x.Position).HasMaxLength(50);
             builder.Property(x => x.Gender).HasMaxLength(50);
-            builder.Property(x => x.Division).IsRequired();
             builder.Property(x => x.BirthDay).IsRequired();
             builder.Property(x => x.DivisionId).IsRequired();
+
+            builder.HasOne(x => x.Division)
+                .WithMany(x => x.Employees)
+                .HasForeignKey(x => x.DivisionId)
+                .IsRequired();
 
             builder.HasData(
                 new Employee()
                 {
-                    EmployeeId = 1,
+             
+                    Id = 1,
                     FirstName = "Валерий",
                     SecondName = "Жмышенко",
                     LastName = "Альбертович",
                     Position = "General",
-                    BirthDay = DateTime.UtcNow
+                    BirthDay = DateTime.UtcNow,
+                    DriverLicense = true,
+                    DivisionId = 1
+           
                 },
                 new Employee()
                 {
-                    EmployeeId = 2,
+                    Id = 2,
                     FirstName = "Михаил",
                     SecondName = "Зубенко",
                     LastName = "Петрович",
                     Position = "Maffiosnic",
-                    BirthDay = DateTime.UtcNow
+                    BirthDay = DateTime.UtcNow,
+                    DriverLicense = true,
+                    DivisionId = 1
+
                 });
 
 

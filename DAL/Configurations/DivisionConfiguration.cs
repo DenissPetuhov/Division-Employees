@@ -7,33 +7,26 @@ namespace Domain.Entity.Configurations
     {
         public void Configure(EntityTypeBuilder<Division> builder)
         {
-            builder.Property(x => x.DivisionId).ValueGeneratedOnAdd();
+            builder.HasKey(x => x.Id);
+            builder.Property(x => x.Id).ValueGeneratedOnAdd();
             builder.Property(x => x.Discription).HasMaxLength(150);
-            builder.Property(x => x.Name).HasMaxLength(50).IsRequired();
+            builder.Property(x => x.Name).HasMaxLength(50)
+                .IsRequired();
+          
+            builder.HasOne(x => x.ParentDivision)
+                .WithMany(x => x.Divisions)
+                .HasForeignKey(x => x.ParentDivisionId)
+                .OnDelete(DeleteBehavior.NoAction);
 
-            builder.HasMany(x => x.Employees)
-                .WithOne(x => x.Division)
-                .HasForeignKey(x => x.DivisionId).IsRequired();
-                
-
-            builder.HasData(new Division()
-            {
-                DivisionId = 1,
-                Name = "OPG#1",
-                Discription = "Maffia",
-                Employees = new List<Employee> {
-                    new Employee 
-                    {
-                        EmployeeId = 1
-                    },
-                    new Employee 
-                    {
-                        EmployeeId = 2
-                    }
-                }
+            builder.HasData(
+                new Division()
+                {
+                    Id = 1,
+                    Name = "OPG#1",
+                    Discription = "Maffia"
 
 
-            });
+                });
 
         }
     }

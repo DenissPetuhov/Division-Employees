@@ -4,6 +4,7 @@ using DAL;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DAL.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240417133832_init")]
+    partial class init
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -75,8 +78,8 @@ namespace DAL.Migrations
                     b.Property<int>("DivisionId")
                         .HasColumnType("int");
 
-                    b.Property<bool?>("DriverLicense")
-                        .HasColumnType("bit");
+                    b.Property<int?>("DriverLicense")
+                        .HasColumnType("int");
 
                     b.Property<string>("FirstName")
                         .IsRequired()
@@ -111,9 +114,9 @@ namespace DAL.Migrations
                         new
                         {
                             Id = 1,
-                            BirthDay = new DateTime(2024, 4, 17, 13, 44, 12, 157, DateTimeKind.Utc).AddTicks(6483),
+                            BirthDay = new DateTime(2024, 4, 17, 13, 38, 32, 447, DateTimeKind.Utc).AddTicks(9524),
                             DivisionId = 1,
-                            DriverLicense = true,
+                            DriverLicense = 1,
                             FirstName = "Валерий",
                             LastName = "Альбертович",
                             Position = "General",
@@ -122,9 +125,9 @@ namespace DAL.Migrations
                         new
                         {
                             Id = 2,
-                            BirthDay = new DateTime(2024, 4, 17, 13, 44, 12, 157, DateTimeKind.Utc).AddTicks(6485),
+                            BirthDay = new DateTime(2024, 4, 17, 13, 38, 32, 447, DateTimeKind.Utc).AddTicks(9528),
                             DivisionId = 1,
-                            DriverLicense = true,
+                            DriverLicense = 1,
                             FirstName = "Михаил",
                             LastName = "Петрович",
                             Position = "Maffiosnic",

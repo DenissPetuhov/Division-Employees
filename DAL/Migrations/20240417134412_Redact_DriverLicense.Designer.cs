@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DAL.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20240413105019_init")]
-    partial class init
+    [Migration("20240417134412_Redact_DriverLicense")]
+    partial class Redact_DriverLicense
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -27,17 +27,16 @@ namespace DAL.Migrations
 
             modelBuilder.Entity("Domain.Entity.Division", b =>
                 {
-                    b.Property<int>("DivisionId")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("DivisionId"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<DateTime>("DateCreate")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Discription")
-                        .IsRequired()
                         .HasMaxLength(150)
                         .HasColumnType("nvarchar(150)");
 
@@ -46,30 +45,40 @@ namespace DAL.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
-                    b.HasKey("DivisionId");
+                    b.Property<int?>("ParentDivisionId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ParentDivisionId");
 
                     b.ToTable("Division");
 
                     b.HasData(
                         new
                         {
-                            DivisionId = 1,
+                            Id = 1,
                             DateCreate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Discription = "My First Division",
-                            Name = "Division#1"
+                            Discription = "Maffia",
+                            Name = "OPG#1"
                         });
                 });
 
             modelBuilder.Entity("Domain.Entity.Employee", b =>
                 {
-                    b.Property<int>("EmployeeId")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<DateTime>("BirthDay")
                         .HasColumnType("datetime2");
 
-                    b.Property<bool>("DriverLicense")
+                    b.Property<int>("DivisionId")
+                        .HasColumnType("int");
+
+                    b.Property<bool?>("DriverLicense")
                         .HasColumnType("bit");
 
                     b.Property<string>("FirstName")
@@ -78,7 +87,6 @@ namespace DAL.Migrations
                         .HasColumnType("nvarchar(50)");
 
                     b.Property<string>("Gender")
-                        .IsRequired()
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
@@ -88,7 +96,6 @@ namespace DAL.Migrations
                         .HasColumnType("nvarchar(50)");
 
                     b.Property<string>("Position")
-                        .IsRequired()
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
@@ -97,29 +104,52 @@ namespace DAL.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
-                    b.HasKey("EmployeeId");
+                    b.HasKey("Id");
+
+                    b.HasIndex("DivisionId");
 
                     b.ToTable("Employee");
 
                     b.HasData(
                         new
                         {
-                            EmployeeId = 1,
-                            BirthDay = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Id = 1,
+                            BirthDay = new DateTime(2024, 4, 17, 13, 44, 12, 157, DateTimeKind.Utc).AddTicks(6483),
+                            DivisionId = 1,
                             DriverLicense = true,
-                            FirstName = "TestEmolyeFirstName",
-                            Gender = "famale",
-                            LastName = "TestEmolyeLastName",
+                            FirstName = "Валерий",
+                            LastName = "Альбертович",
                             Position = "General",
-                            SecondName = "TestEmolyeSecondName"
+                            SecondName = "Жмышенко"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            BirthDay = new DateTime(2024, 4, 17, 13, 44, 12, 157, DateTimeKind.Utc).AddTicks(6485),
+                            DivisionId = 1,
+                            DriverLicense = true,
+                            FirstName = "Михаил",
+                            LastName = "Петрович",
+                            Position = "Maffiosnic",
+                            SecondName = "Зубенко"
                         });
+                });
+
+            modelBuilder.Entity("Domain.Entity.Division", b =>
+                {
+                    b.HasOne("Domain.Entity.Division", "ParentDivision")
+                        .WithMany("Divisions")
+                        .HasForeignKey("ParentDivisionId")
+                        .OnDelete(DeleteBehavior.NoAction);
+
+                    b.Navigation("ParentDivision");
                 });
 
             modelBuilder.Entity("Domain.Entity.Employee", b =>
                 {
                     b.HasOne("Domain.Entity.Division", "Division")
                         .WithMany("Employees")
-                        .HasForeignKey("EmployeeId")
+                        .HasForeignKey("DivisionId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -128,6 +158,8 @@ namespace DAL.Migrations
 
             modelBuilder.Entity("Domain.Entity.Division", b =>
                 {
+                    b.Navigation("Divisions");
+
                     b.Navigation("Employees");
                 });
 #pragma warning restore 612, 618

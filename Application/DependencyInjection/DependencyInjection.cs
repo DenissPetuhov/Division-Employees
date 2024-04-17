@@ -1,6 +1,5 @@
-﻿using Application.Service;
-using Domain.Entity;
-using Domain.Interface.Repositories;
+﻿using Application.Mapping;
+using Application.Service;
 using Domain.Interface.Services;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -12,12 +11,17 @@ namespace DAL.DependencyInjection
         {
 
             services.InitServices();
+            
 
         }
         public static void InitServices(this IServiceCollection services)
         {
             services.AddScoped<IEmployeeService, EmployeeService>();
             services.AddScoped<IDivisionService, DivisionService>();
+            services.AddHostedService<MigrationsHostedService>();
+            services.AddAutoMapper(typeof(DivisionMapping));
+            services.AddAutoMapper(typeof(EmployeeMapping));
+
         }
 
     }

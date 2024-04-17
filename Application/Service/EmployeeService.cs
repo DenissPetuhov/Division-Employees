@@ -48,7 +48,7 @@ namespace Application.Service
             try
             {
                 var data = await _employeeService.GetAll()
-                    .Where(x => x.Division.DivisionId == divisionId)
+                    .Where(x => x.Division.Id == divisionId)
                     .Select(x => _mapper.Map<EmployeeDto>(x)).ToArrayAsync();
                 if (data != null)
                 {
@@ -72,7 +72,7 @@ namespace Application.Service
             var response = new BaseResult<EmployeeDto>();
             try
             {
-                var division = _divisionService.GetAll().FirstOrDefaultAsync(x => x.DivisionId == employeeDto.divisionId);
+                var division = _divisionService.GetAll().FirstOrDefaultAsync(x => x.Id == employeeDto.divisionId);
                 if (division.Result == null)
                 {
                     response.ErrorCode = (int)ErrorCode.NoDataFound;
@@ -81,8 +81,6 @@ namespace Application.Service
                 }
 
                 var employee = _mapper.Map<Employee>(employeeDto);
-
-                employee.Division = division.Result;
                 var responsedata = await _employeeService.CreateAsync(employee);
 
                 response.Data = _mapper.Map<EmployeeDto>(responsedata);
@@ -104,7 +102,7 @@ namespace Application.Service
             var response = new BaseResult<EmployeeDto>();
             try
             {
-                var data = await _employeeService.GetAll().FirstOrDefaultAsync(x => x.EmployeeId == employee.EmployeeId);
+                var data = await _employeeService.GetAll().FirstOrDefaultAsync(x => x.Id == employee.EmployeeId);
                 if (data == null)
                 {
                     response.ErrorCode = (int)ErrorCode.NoDataFound;
@@ -130,7 +128,7 @@ namespace Application.Service
             var response = new BaseResult<EmployeeDto>();
             try
             {
-                var data = await _employeeService.GetAll().FirstOrDefaultAsync(x => x.EmployeeId == employeeId);
+                var data = await _employeeService.GetAll().FirstOrDefaultAsync(x => x.Id == employeeId);
                 if (data == null)
                 {
                     response.ErrorCode = (int)ErrorCode.NoDataFound;
@@ -155,5 +153,7 @@ namespace Application.Service
             }
 
         }
+
+
     }
 }
