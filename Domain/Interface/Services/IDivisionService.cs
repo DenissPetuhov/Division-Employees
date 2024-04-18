@@ -29,7 +29,7 @@ namespace Domain.Interface.Services
         /// <summary>
         /// Добавить родительский отдел
         /// </summary>
-        Task<BaseResult> AddParentDivision(AddParentDivisionDto addParentDivisionDto);
+        Task<BaseResult<DivisionDto>> AddParentDivision(AddParentDivisionDto addParentDivisionDto);
 
     }
 }

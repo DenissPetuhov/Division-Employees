@@ -189,12 +189,18 @@ namespace Application.Service
                 BaseResult<Division> EntityDivisionResult = GetEntityDivision(addParentDivisionDto.Id);
                 if (!EntityDivisionResult.isSuccses)
                 {
-                    response.Data = 
-                    return EntityDivisionResult;
+                    response.ErrorCode = EntityDivisionResult.ErrorCode;
+                    response.ErrorMessage = EntityDivisionResult.ErrorMessage;
+                    return response;
                 }
 
                 BaseResult<Division> EntityPrentDivisionResult = GetEntityDivision(addParentDivisionDto.ParentDivisionId);
-                if (!EntityPrentDivisionResult.isSuccses) return EntityPrentDivisionResult;
+                if (!EntityPrentDivisionResult.isSuccses)
+                {
+                    response.ErrorCode = EntityPrentDivisionResult.ErrorCode;
+                    response.ErrorMessage = EntityPrentDivisionResult.ErrorMessage;
+                    return response;
+                }
 
                 EntityDivisionResult.Data.ParentDivision = EntityPrentDivisionResult.Data;
                 var result = CheckRecursionDivision(EntityDivisionResult, new List<int>());
@@ -203,17 +209,9 @@ namespace Application.Service
                 await _divisionService.UpdateAsync(division);
                 return new BaseResult();
             }
-            catch (NullReferenceException)
-            {
-                return new BaseResult
-                {
-                    ErrorCode = (int)ErrorCode.ServiceError,
-                    ErrorMessage = "Такой записи не существует"
-                };
-            }
             catch (Exception ex)
             {
-                return new BaseResult()
+                return new BaseResult<DivisionDto>
                 {
                     ErrorCode = (int)ErrorCode.ServiceError,
                     ErrorMessage = ex.Message
