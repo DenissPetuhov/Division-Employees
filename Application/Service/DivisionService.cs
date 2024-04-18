@@ -20,7 +20,6 @@ namespace Application.Service
             _divisionService = divisionService;
             _mapper = mapper;
         }
-
         public async Task<BaseResult<DivisionDto>> CreateDivisionAsync(CreateDivisionDto divisiondto)
         {
             var response = new BaseResult<DivisionDto>();
@@ -55,16 +54,12 @@ namespace Application.Service
                     response.ErrorMessage = $"Отдел по заданному id={divisionId} не найден.";
                     return response;
                 }
-
                 var responsedata = await _divisionService.RemoveAsync(data);
                 response.Data = _mapper.Map<DivisionDto>(responsedata);
                 return response;
-
-
             }
             catch (Exception ex)
             {
-
                 return new BaseResult<DivisionDto>
                 {
                     ErrorCode = (int)ErrorCode.ServiceError,
@@ -78,7 +73,8 @@ namespace Application.Service
             try
             {
                 var data = await _divisionService.GetAll()
-                    .Select(x => _mapper.Map<DivisionDto>(x)).ToArrayAsync();
+                    .Select(x => _mapper.Map<DivisionDto>(x))
+                    .ToArrayAsync();
                 if (data == null)
                 {
                     response.ErrorCode = (int)ErrorCode.NoDataFound;
@@ -94,7 +90,6 @@ namespace Application.Service
                 {
                     ErrorCode = (int)ErrorCode.ServiceError,
                     ErrorMessage = ex.Message
-
                 };
             }
         }
@@ -112,7 +107,6 @@ namespace Application.Service
                     response.ErrorMessage = $"Отдел по заданному id={divisionId} не найден.";
                     return response;
                 }
-
                 response.Data = data;
                 return response;
             }
@@ -174,24 +168,38 @@ namespace Application.Service
 
             return CheckRecursionDivision(division.ParentDivision, idList);
         }
-        private Division GetEntityDivision(int divisionId)
+        private BaseResult<Division> GetEntityDivision(int divisionId)
         {
-            var response = _divisionService.GetAll().FirstOrDefault(x => x.Id == divisionId);
-            if (response is null)
+            var response = new BaseResult<Division>();
+            var data = _divisionService.GetAll().FirstOrDefault(x => x.Id == divisionId);
+            if (data is null)
             {
-                throw new NullReferenceException();
+                response.ErrorCode = (int)ErrorCode.NoDataFound;
+                response.ErrorMessage = $"Отдел по заданному id={divisionId} не найден.";
+                return response;
             }
+            response.Data = data;
             return response;
         }
-        public async Task<BaseResult> AddParentDivision(AddParentDivisionDto addParentDivisionDto)
+        public async Task<BaseResult<DivisionDto>> AddParentDivision(AddParentDivisionDto addParentDivisionDto)
         {
             try
             {
-                var division = GetEntityDivision(addParentDivisionDto.Id);
-                var parentDivision = GetEntityDivision(addParentDivisionDto.ParentDivisionId);
-                division.ParentDivision = parentDivision;
-                var result = CheckRecursionDivision(division, new List<int>());
+                BaseResult<DivisionDto> response = new BaseResult<DivisionDto>();
+                BaseResult<Division> EntityDivisionResult = GetEntityDivision(addParentDivisionDto.Id);
+                if (!EntityDivisionResult.isSuccses)
+                {
+                    response.Data = 
+                    return EntityDivisionResult;
+                }
+
+                BaseResult<Division> EntityPrentDivisionResult = GetEntityDivision(addParentDivisionDto.ParentDivisionId);
+                if (!EntityPrentDivisionResult.isSuccses) return EntityPrentDivisionResult;
+
+                EntityDivisionResult.Data.ParentDivision = EntityPrentDivisionResult.Data;
+                var result = CheckRecursionDivision(EntityDivisionResult, new List<int>());
                 if (!result.isSuccses) return result;
+
                 await _divisionService.UpdateAsync(division);
                 return new BaseResult();
             }

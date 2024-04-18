@@ -3,8 +3,8 @@
 namespace Domain.Dto
 {
 
-    public record class DivisionDto(int Id, string Name, DateTime DateCreate, string? Discription);
-    public record class CreateDivisionDto(string Name, string Discription);
+    public record class DivisionDto(int Id, string Name, DateTime DateCreate, string? Description);
+    public record class CreateDivisionDto(string Name, string? Description);
     public record class AddParentDivisionDto(int Id, int ParentDivisionId);
 
     

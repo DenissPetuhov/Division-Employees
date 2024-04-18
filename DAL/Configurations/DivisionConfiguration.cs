@@ -9,7 +9,7 @@ namespace Domain.Entity.Configurations
         {
             builder.HasKey(x => x.Id);
             builder.Property(x => x.Id).ValueGeneratedOnAdd();
-            builder.Property(x => x.Discription).HasMaxLength(150);
+            builder.Property(x => x.Description).HasMaxLength(150);
             builder.Property(x => x.Name).HasMaxLength(50)
                 .IsRequired();
           
@@ -23,7 +23,7 @@ namespace Domain.Entity.Configurations
                 {
                     Id = 1,
                     Name = "OPG#1",
-                    Discription = "Maffia"
+                    Description = "Maffia"
 
 
                 });

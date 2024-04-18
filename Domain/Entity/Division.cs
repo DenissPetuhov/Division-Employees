@@ -5,7 +5,7 @@
         public int Id { get; set; }
         public string Name { get; set; }
         public DateTime DateCreate { get; set; }
-        public string? Discription { get; set; }
+        public string? Description { get; set; }
         public int? ParentDivisionId { get; set; }
         public Division? ParentDivision { get; set; }
         public List<Division> Divisions { get; set; } = new List<Division> { };

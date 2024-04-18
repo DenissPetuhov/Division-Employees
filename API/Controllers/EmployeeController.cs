@@ -69,7 +69,7 @@ namespace API.Controllers
             return BadRequest(response);
         }
         [HttpPost("add-parent-division")]
-        public async Task<ActionResult<BaseResult>> AddParentDivision( AddParentDivisionDto divisionDto)
+        public async Task<ActionResult<BaseResult>> AddParentDivisionAsync(AddParentDivisionDto divisionDto)
         {
             var response = await _divisionService.AddParentDivision(divisionDto);
             if (response.isSuccses) return Ok(response);
