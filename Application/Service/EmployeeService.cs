@@ -35,7 +35,7 @@ namespace Application.Service
             {
                 return new BaseResult<EmployeeDto>
                 {
-                    ErrorCode = (int)ErrorCode.ServiceError,
+                    ErrorCode = (int)ErrorCode.ExceptionService,
                     ErrorMessage = ex.Message,
 
                 };
@@ -60,7 +60,7 @@ namespace Application.Service
             {
                 return new CollectionResult<EmployeeDto>()
                 {
-                    ErrorCode = (int)ErrorCode.ServiceError,
+                    ErrorCode = (int)ErrorCode.ExceptionService,
                     ErrorMessage = ex.Message
 
                 };
@@ -74,7 +74,7 @@ namespace Application.Service
                 var division = _divisionService.GetAll().FirstOrDefaultAsync(x => x.Id == employeeDto.divisionId);
                 if (division.Result == null)
                 {
-                    response.ErrorCode = (int)ErrorCode.NoDataFound;
+                    response.ErrorCode = (int)ErrorCode.DataNotFound;
                     response.ErrorMessage = $"Отдел по заданному id={employeeDto.divisionId} не найден.";
                     return response;
                 }
@@ -90,7 +90,7 @@ namespace Application.Service
 
                 return new BaseResult<EmployeeDto>
                 {
-                    ErrorCode = (int)ErrorCode.ServiceError,
+                    ErrorCode = (int)ErrorCode.ExceptionService,
                     ErrorMessage = ex.Message,
                 };
             }
@@ -104,7 +104,7 @@ namespace Application.Service
                 var data = await _employeeService.GetAll().FirstOrDefaultAsync(x => x.Id == employee.Id);
                 if (data == null)
                 {
-                    response.ErrorCode = (int)ErrorCode.NoDataFound;
+                    response.ErrorCode = (int)ErrorCode.DataNotFound;
                     response.ErrorMessage = $"Работник по заданному id={employee.Id} не найден.";
                     return response;
                 }
@@ -117,7 +117,7 @@ namespace Application.Service
             {
                 return new BaseResult<EmployeeDto>
                 {
-                    ErrorCode = (int)ErrorCode.ServiceError,
+                    ErrorCode = (int)ErrorCode.ExceptionService,
                     ErrorMessage = ex.Message
                 };
             }
@@ -130,7 +130,7 @@ namespace Application.Service
                 var data = await _employeeService.GetAll().FirstOrDefaultAsync(x => x.Id == employeeId);
                 if (data == null)
                 {
-                    response.ErrorCode = (int)ErrorCode.NoDataFound;
+                    response.ErrorCode = (int)ErrorCode.DataNotFound;
                     response.ErrorMessage = $"Работник по заданному id={employeeId} не найден.";
                     return response;
                 }
@@ -146,7 +146,7 @@ namespace Application.Service
 
                 return new BaseResult<EmployeeDto>
                 {
-                    ErrorCode = (int)ErrorCode.ServiceError,
+                    ErrorCode = (int)ErrorCode.ExceptionService,
                     ErrorMessage = ex.Message
                 };
             }

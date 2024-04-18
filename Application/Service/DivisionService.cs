@@ -1,5 +1,4 @@
 ﻿using AutoMapper;
-using Azure;
 using Domain.Dto;
 using Domain.Entity;
 using Domain.Enums;
@@ -37,7 +36,7 @@ namespace Application.Service
 
                 return new BaseResult<DivisionDto>
                 {
-                    ErrorCode = (int)ErrorCode.ServiceError,
+                    ErrorCode = (int)ErrorCode.ExceptionService,
                     ErrorMessage = ex.Message
                 };
             }
@@ -50,7 +49,7 @@ namespace Application.Service
                 var data = await _divisionService.GetAll().FirstOrDefaultAsync(x => x.Id == divisionId);
                 if (data == null)
                 {
-                    response.ErrorCode = (int)ErrorCode.NoDataFound;
+                    response.ErrorCode = (int)ErrorCode.DataNotFound;
                     response.ErrorMessage = $"Отдел по заданному id={divisionId} не найден.";
                     return response;
                 }
@@ -62,7 +61,7 @@ namespace Application.Service
             {
                 return new BaseResult<DivisionDto>
                 {
-                    ErrorCode = (int)ErrorCode.ServiceError,
+                    ErrorCode = (int)ErrorCode.ExceptionService,
                     ErrorMessage = ex.Message,
                 };
             }
@@ -77,7 +76,7 @@ namespace Application.Service
                     .ToArrayAsync();
                 if (data == null)
                 {
-                    response.ErrorCode = (int)ErrorCode.NoDataFound;
+                    response.ErrorCode = (int)ErrorCode.DataNotFound;
                     response.ErrorMessage = "Данные не найдены";
                     return response;
                 }
@@ -88,7 +87,7 @@ namespace Application.Service
             {
                 return new CollectionResult<DivisionDto>()
                 {
-                    ErrorCode = (int)ErrorCode.ServiceError,
+                    ErrorCode = (int)ErrorCode.ExceptionService,
                     ErrorMessage = ex.Message
                 };
             }
@@ -103,7 +102,7 @@ namespace Application.Service
                     .FirstOrDefaultAsync(x => x.Id == divisionId);
                 if (data == null)
                 {
-                    response.ErrorCode = (int)ErrorCode.NoDataFound;
+                    response.ErrorCode = (int)ErrorCode.DataNotFound;
                     response.ErrorMessage = $"Отдел по заданному id={divisionId} не найден.";
                     return response;
                 }
@@ -114,7 +113,7 @@ namespace Application.Service
             {
                 return new BaseResult<DivisionDto>
                 {
-                    ErrorCode = (int)ErrorCode.ServiceError,
+                    ErrorCode = (int)ErrorCode.ExceptionService,
                     ErrorMessage = ex.Message,
 
                 };
@@ -128,7 +127,7 @@ namespace Application.Service
                 var data = await _divisionService.GetAll().FirstOrDefaultAsync(x => x.Id == division.Id);
                 if (data == null)
                 {
-                    response.ErrorCode = (int)ErrorCode.NoDataFound;
+                    response.ErrorCode = (int)ErrorCode.DataNotFound;
                     response.ErrorMessage = $"Отдел по заданному id={division.Id} не найден.";
                     return response;
                 }
@@ -141,7 +140,7 @@ namespace Application.Service
             {
                 return new BaseResult<DivisionDto>
                 {
-                    ErrorCode = (int)ErrorCode.ServiceError,
+                    ErrorCode = (int)ErrorCode.ExceptionService,
                     ErrorMessage = ex.Message,
                 };
             }
@@ -154,7 +153,6 @@ namespace Application.Service
                 response.Data = division;
                 return response;
             }
-
             foreach (var item in idList)
             {
                 if (item == division.Id)
@@ -168,52 +166,49 @@ namespace Application.Service
 
             return CheckRecursionDivision(division.ParentDivision, idList);
         }
-        private BaseResult<Division> GetEntityDivision(int divisionId)
-        {
-            var response = new BaseResult<Division>();
-            var data = _divisionService.GetAll().FirstOrDefault(x => x.Id == divisionId);
-            if (data is null)
-            {
-                response.ErrorCode = (int)ErrorCode.NoDataFound;
-                response.ErrorMessage = $"Отдел по заданному id={divisionId} не найден.";
-                return response;
-            }
-            response.Data = data;
-            return response;
-        }
         public async Task<BaseResult<DivisionDto>> AddParentDivision(AddParentDivisionDto addParentDivisionDto)
         {
             try
             {
-                BaseResult<DivisionDto> response = new BaseResult<DivisionDto>();
-                BaseResult<Division> EntityDivisionResult = GetEntityDivision(addParentDivisionDto.Id);
-                if (!EntityDivisionResult.isSuccses)
+                var response = new BaseResult<DivisionDto>();
+                //Родительский отдел
+                Division? parentDivision;
+                //Зависимый отдел
+                Division? division;
+                //Вызов сущности зависимого отдела
+                division = _divisionService.GetAll().FirstOrDefault(x => x.Id == addParentDivisionDto.Id);
+                if (division is null)
                 {
-                    response.ErrorCode = EntityDivisionResult.ErrorCode;
-                    response.ErrorMessage = EntityDivisionResult.ErrorMessage;
+                    response.ErrorCode = (int)ErrorCode.DataNotFound;
+                    response.ErrorMessage = $"Зависимый отдел по заданному id={addParentDivisionDto.Id} не найден.";
                     return response;
                 }
-
-                BaseResult<Division> EntityPrentDivisionResult = GetEntityDivision(addParentDivisionDto.ParentDivisionId);
-                if (!EntityPrentDivisionResult.isSuccses)
+                //Вызов сущности родительского отдела
+                parentDivision = _divisionService.GetAll().FirstOrDefault(x => x.Id == addParentDivisionDto.ParentDivisionId);
+                if (parentDivision is null)
                 {
-                    response.ErrorCode = EntityPrentDivisionResult.ErrorCode;
-                    response.ErrorMessage = EntityPrentDivisionResult.ErrorMessage;
+                    response.ErrorCode = (int)ErrorCode.DataNotFound;
+                    response.ErrorMessage = $"Родительски отдел по заданному id={addParentDivisionDto.Id} не найден.";
                     return response;
                 }
-
-                EntityDivisionResult.Data.ParentDivision = EntityPrentDivisionResult.Data;
-                var result = CheckRecursionDivision(EntityDivisionResult, new List<int>());
-                if (!result.isSuccses) return result;
-
-                await _divisionService.UpdateAsync(division);
-                return new BaseResult();
+                // Установка зависимости 
+                division.ParentDivision = parentDivision;
+                var result = CheckRecursionDivision(division, new List<int>());
+                if (!result.isSuccses)
+                {
+                    response.ErrorCode = result.ErrorCode;
+                    response.ErrorMessage = result.ErrorMessage;
+                    return response;
+                }
+                var responsedata  = await _divisionService.UpdateAsync(division);
+                response.Data = _mapper.Map<DivisionDto>(responsedata);
+                return response;
             }
             catch (Exception ex)
             {
                 return new BaseResult<DivisionDto>
                 {
-                    ErrorCode = (int)ErrorCode.ServiceError,
+                    ErrorCode = (int)ErrorCode.ExceptionService,
                     ErrorMessage = ex.Message
                 };
             }

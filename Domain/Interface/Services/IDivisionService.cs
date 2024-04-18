@@ -27,7 +27,7 @@ namespace Domain.Interface.Services
         /// </summary>
         Task<BaseResult<DivisionDto>> DeleteDivisionAsync(int divisionId);
         /// <summary>
-        /// Добавить родительский отдел
+        /// Установить связь отделов
         /// </summary>
         Task<BaseResult<DivisionDto>> AddParentDivision(AddParentDivisionDto addParentDivisionDto);
 
