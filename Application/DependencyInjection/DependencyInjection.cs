@@ -9,10 +9,7 @@ namespace DAL.DependencyInjection
     {
         public static void AddApplication(this IServiceCollection services)
         {
-
             services.InitServices();
-       
-
         }
         public static void InitServices(this IServiceCollection services)
         {

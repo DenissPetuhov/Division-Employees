@@ -13,7 +13,7 @@ namespace Domain.Interface.Services
         /// <summary>
         /// Получение всех рабоников по id отдела
         /// </summary>
-        Task<CollectionResult<EmployeeDto>> GetEmployeesToDvisionIdAsync(int divisioniD);
+        Task<CollectionResult<EmployeeDto>> GetEmployeesByDvisionIdAsync(int divisioniD);
         /// <summary>
         /// Создание работника 
         /// </summary>

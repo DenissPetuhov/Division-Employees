@@ -12,16 +12,19 @@ namespace API.Controllers
     public class EmployeeController : ControllerBase
     {
         private readonly IEmployeeService _employeeService;
-        private readonly IDivisionService _divisionService;
-        private readonly IMapper mapper;
-        public EmployeeController(IEmployeeService employeeService, IDivisionService decisionService)
+        public EmployeeController(IEmployeeService employeeService)
         {
             _employeeService = employeeService;
-            _divisionService = decisionService;
+
         }
+        //[HttpPost("create")]
+        //public async Task<ActionResult<BaseResult<Division>>> GetEmployeeByDivisionId(int divisionId)
+        //{
+
+        //}
+
+
         [HttpGet("get-employee-by-id id={employeeId}")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<ActionResult<BaseResult<Employee>>> GetEmployeeAsync(int employeeId)
         {
             var response = await _employeeService.GetEmployeeAsync(employeeId);
@@ -29,53 +32,22 @@ namespace API.Controllers
 
             return BadRequest(response);
         }
-        [HttpGet("get-division-by-id id={divisionId}")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<ActionResult<BaseResult<Employee>>> GetDivionAsync(int divisionId)
-        {
-            var response = await _divisionService.GetDivisionAsync(divisionId);
-            if (response.isSuccses) return Ok(response);
 
-            return BadRequest(response);
-        }
-        [HttpGet("get-all-division")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<ActionResult<CollectionResult<Division>>> GetAllDivision()
+      
+        [HttpGet("get-employees-by-divisionId id={divisionId}")]
+        public async Task<ActionResult<CollectionResult<Division>>> GetEmployeesByDivisionId(int divisionId)
         {
-            var response = await _divisionService.GetAllDivisionsAsync();
-            if (response.isSuccses) return Ok(response);
-
-            return BadRequest(response);
-        }
-        [HttpGet("get-employee-by-divisionId id={divisionId}")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<ActionResult<CollectionResult<Division>>> GetEmployeeByDivisionId(int divisionId)
-        {
-            var response = await _employeeService.GetEmployeesToDvisionIdAsync(divisionId);
+            var response = await _employeeService.GetEmployeesByDvisionIdAsync(divisionId);
             if (response.isSuccses) return Ok(response);
 
             return BadRequest(response);
         }
 
-        [HttpPost("add-division")]
-        public async Task<ActionResult<BaseResult>> AddDivision(CreateDivisionDto divisionDto)
-        {
-            var response = await _divisionService.CreateDivisionAsync(divisionDto);
-            if (response.isSuccses) return Ok(response);
+        //[HttpPost("create")]
+    
 
-            return BadRequest(response);
-        }
-        [HttpPost("add-parent-division")]
-        public async Task<ActionResult<BaseResult>> AddParentDivisionAsync(AddParentDivisionDto divisionDto)
-        {
-            var response = await _divisionService.AddParentDivision(divisionDto);
-            if (response.isSuccses) return Ok(response);
 
-            return BadRequest(response);
-        }
+
 
     }
 }

@@ -26,9 +26,16 @@ namespace Application.Service
             var response = new BaseResult<EmployeeDto>();
             try
             {
-                response.Data = await _employeeService.GetAll()
+                var data = await _employeeService.GetAll()
                     .Select(x => _mapper.Map<EmployeeDto>(x))
                     .FirstOrDefaultAsync(x => x.Id == employeeId);
+                if (data is null)
+                {
+                    response.ErrorCode = (int)ErrorCode.DataNotFound;
+                    response.ErrorMessage = $"Сотрудник по заданному id={employeeId} не найден.";
+                    return response;
+                }
+                response.Data = data;
                 return response;
             }
             catch (Exception ex)
@@ -37,23 +44,25 @@ namespace Application.Service
                 {
                     ErrorCode = (int)ErrorCode.ExceptionService,
                     ErrorMessage = ex.Message,
-
                 };
             }
         }
-        public async Task<CollectionResult<EmployeeDto>> GetEmployeesToDvisionIdAsync(int divisionId)
+        public async Task<CollectionResult<EmployeeDto>> GetEmployeesByDvisionIdAsync(int divisionId)
         {
             var response = new CollectionResult<EmployeeDto>();
             try
             {
                 var data = await _employeeService.GetAll()
-                    .Where(x => x.Division.Id == divisionId)
-                    .Select(x => _mapper.Map<EmployeeDto>(x)).ToArrayAsync();
+                    .Where(x => x.DivisionId == divisionId)
+                    .Select(x => _mapper.Map<EmployeeDto>(x))
+                    .ToArrayAsync();
                 if (data != null)
                 {
-                    response.Data = data;
-                    response.ErrorCode = (int)ErrorCode.NoError;
+                    response.ErrorCode = (int)ErrorCode.DataNotFound;
+                    response.ErrorMessage = $"Сотрудники по заданному id={divisionId} отдела не найден.";
+                    return response;
                 }
+                response.Data = data;
                 return response;
             }
             catch (Exception ex)
@@ -72,7 +81,7 @@ namespace Application.Service
             try
             {
                 var division = _divisionService.GetAll().FirstOrDefaultAsync(x => x.Id == employeeDto.divisionId);
-                if (division.Result == null)
+                if (division is null)
                 {
                     response.ErrorCode = (int)ErrorCode.DataNotFound;
                     response.ErrorMessage = $"Отдел по заданному id={employeeDto.divisionId} не найден.";
@@ -102,10 +111,10 @@ namespace Application.Service
             try
             {
                 var data = await _employeeService.GetAll().FirstOrDefaultAsync(x => x.Id == employee.Id);
-                if (data == null)
+                if (data is null)
                 {
                     response.ErrorCode = (int)ErrorCode.DataNotFound;
-                    response.ErrorMessage = $"Работник по заданному id={employee.Id} не найден.";
+                    response.ErrorMessage = $"Сотрудник по заданному id={employee.Id} не найден.";
                     return response;
                 }
                 var responsedata = await _employeeService.UpdateAsync(data);
@@ -128,18 +137,15 @@ namespace Application.Service
             try
             {
                 var data = await _employeeService.GetAll().FirstOrDefaultAsync(x => x.Id == employeeId);
-                if (data == null)
+                if (data is null)
                 {
                     response.ErrorCode = (int)ErrorCode.DataNotFound;
-                    response.ErrorMessage = $"Работник по заданному id={employeeId} не найден.";
+                    response.ErrorMessage = $"Сотрудник по заданному id={employeeId} не найден.";
                     return response;
                 }
-
                 var resposedata = await _employeeService.RemoveAsync(data);
                 response.Data = _mapper.Map<EmployeeDto>(resposedata);
                 return response;
-
-
             }
             catch (Exception ex)
             {
