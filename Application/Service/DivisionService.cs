@@ -194,7 +194,6 @@ namespace Application.Service
                 if (!result.isSuccses) return result;
                 await _divisionService.UpdateAsync(division);
                 return new BaseResult();
-
             }
             catch (NullReferenceException)
             {
