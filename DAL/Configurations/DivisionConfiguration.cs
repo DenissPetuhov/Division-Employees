@@ -17,6 +17,8 @@ namespace Domain.Entity.Configurations
                 .WithMany(x => x.Divisions)
                 .HasForeignKey(x => x.ParentDivisionId)
                 .OnDelete(DeleteBehavior.NoAction);
+            builder.Property(x => x.isRoot)
+                .IsRequired();
 
             builder.HasData(
                 new Division()
@@ -24,8 +26,6 @@ namespace Domain.Entity.Configurations
                     Id = 1,
                     Name = "OPG#1",
                     Description = "Maffia"
-
-
                 });
 
         }

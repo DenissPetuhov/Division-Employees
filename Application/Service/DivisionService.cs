@@ -144,31 +144,6 @@ namespace Application.Service
                 };
             }
         }
-        private BaseResult<Division> CheckRecursionDivision(Division division, List<int> idList)
-        {
-            var response = new BaseResult<Division>();
-            response.Data = division;
-            //foreach (Division obj in division.Divisions)
-            //{
-            //    idList.Add(obj.Id);
-            //    CheckRecursionDivision(obj, idList);
-            //}
-            //if (!division.Divisions.IsNullOrEmpty())
-            //{
-            //    response.Data = division;
-            //    return response;
-            //}
-
-            //if (division.ParentDivision is null)
-            //{
-            //    response.Data = division;
-            //    return response;
-            //}
-            //idList.Add(division.ParentDivision.Id);
-            //CheckRecursionDivision(division.ParentDivision, idList);
-
-            return response;
-        }
         public async Task<BaseResult<DivisionDto>> AddParentDivision(AddParentDivisionDto addParentDivisionDto)
         {
             try
@@ -196,7 +171,6 @@ namespace Application.Service
                 }
                 // Установка зависимости 
                 division.ParentDivision = parentDivision;
-                var result = CheckRecursionDivision(parentDivision, new List<int>());
 
                 if (!result.isSuccses)
                 {
