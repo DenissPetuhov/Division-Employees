@@ -10,7 +10,6 @@
         public Division? ParentDivision { get; set; }
         public List<Division> Divisions { get; set; } = new List<Division> { };
         public ICollection<Employee>? Employees { get; set; } = new List<Employee>();
-        public bool isRoot { get; set; }
 
     }
 }

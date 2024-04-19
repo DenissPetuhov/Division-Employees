@@ -2,7 +2,6 @@
 using Domain.Entity;
 using Domain.Interface.Services;
 using Domain.Result;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers
@@ -19,13 +18,14 @@ namespace API.Controllers
         }
 
         [HttpGet("get-division-by-id id={divisionId}")]
-        public async Task<ActionResult<BaseResult<Employee>>> GetDivionAsync(int divisionId)
+        public async Task<ActionResult<BaseResult<Division>>> GetDivsionAsync(int divisionId)
         {
             var response = await _divisionService.GetDivisionAsync(divisionId);
             if (response.isSuccses) return Ok(response);
 
             return BadRequest(response);
         }
+
         [HttpPost("add-parent-division")]
         public async Task<ActionResult<BaseResult>> AddParentDivisionAsync(AddParentDivisionDto divisionDto)
         {
@@ -43,13 +43,33 @@ namespace API.Controllers
             return BadRequest(response);
         }
 
-        [HttpPost("add-division")]
-        public async Task<ActionResult<BaseResult>> AddDivision(CreateDivisionDto divisionDto)
+        [HttpPost("create-division")]
+        public async Task<ActionResult<BaseResult>> CreateDivision(CreateDivisionDto divisionDto)
         {
             var response = await _divisionService.CreateDivisionAsync(divisionDto);
             if (response.isSuccses) return Ok(response);
 
             return BadRequest(response);
         }
+
+        [HttpPut("update-division")]
+        public async Task<ActionResult<BaseResult>> UpdateDivision(DivisionDto divisionDto)
+        {
+            var response = await _divisionService.UpdateDivisionAsync(divisionDto);
+            if (response.isSuccses) return Ok(response);
+
+            return BadRequest(response);
+        }
+
+        [HttpDelete("delete-division-by-id={id}")]
+        public async Task<ActionResult<BaseResult>> DeleteDivision(int id)
+        {
+            var response = await _divisionService.DeleteDivisionAsync(id);
+            if (response.isSuccses) return Ok(response);
+
+            return BadRequest(response);
+        }
+
+
     }
 }

@@ -12,13 +12,11 @@ namespace Domain.Entity.Configurations
             builder.Property(x => x.Description).HasMaxLength(150);
             builder.Property(x => x.Name).HasMaxLength(50)
                 .IsRequired();
-          
+
             builder.HasOne(x => x.ParentDivision)
                 .WithMany(x => x.Divisions)
                 .HasForeignKey(x => x.ParentDivisionId)
                 .OnDelete(DeleteBehavior.NoAction);
-            builder.Property(x => x.isRoot)
-                .IsRequired();
 
             builder.HasData(
                 new Division()

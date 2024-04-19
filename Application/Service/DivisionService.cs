@@ -170,17 +170,13 @@ namespace Application.Service
                     return response;
                 }
                 // Установка зависимости 
-                division.ParentDivision = parentDivision;
-
-                if (!result.isSuccses)
+                if (ChekingForChild(division, addParentDivisionDto.ParentDivisionId, new List<int>()))
                 {
-                    response.ErrorCode = result.ErrorCode;
-                    response.ErrorMessage = result.ErrorMessage;
+                    response.ErrorCode = (int)ErrorCode.CyclicDependency;
+                    response.ErrorMessage = "Установть зависимость не возможно образуется циклическая зависимость";
                     return response;
                 }
-
-                var responsedata = await _divisionService.UpdateAsync(division);
-                response.Data = _mapper.Map<DivisionDto>(responsedata);
+                response.Data =  _mapper.Map<DivisionDto>(await _divisionService.UpdateAsync(division));
                 return response;
             }
             catch (Exception ex)
@@ -191,7 +187,31 @@ namespace Application.Service
                     ErrorMessage = ex.Message
                 };
             }
+        }
+
+        /// <summary>
+        /// Проверка у изменяемого объекта явяется ли устанавлеваемый его ребёнком
+        /// </summary>
+        /// <param name="CheckDivision">Проверяемый отдел</param>
+        /// <param name="idChildDivision">Id ребенка который проверяем</param>
+        /// <param name="idlist">Ссылка на список для записи</param>
+        /// <returns>true если у детей найден это ид, false если ид не найден </returns>
+        private bool ChekingForChild(Division CheckDivision, int idChildDivision, List<int> idlist)
+        {
+            if (!CheckDivision.Divisions.IsNullOrEmpty())
+            {
+                foreach (var child in CheckDivision.Divisions)
+                {
+                    idlist.Add(child.Id);
+                    ChekingForChild(child, idChildDivision, idlist);
+                }
+                if (idlist.Contains(idChildDivision))
+                    return true;
+            }
+            return false;
+
 
         }
+   
     }
 }

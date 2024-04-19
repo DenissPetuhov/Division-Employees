@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DAL.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20240417134412_Redact_DriverLicense")]
-    partial class Redact_DriverLicense
+    [Migration("20240419073453_init")]
+    partial class init
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -36,7 +36,7 @@ namespace DAL.Migrations
                     b.Property<DateTime>("DateCreate")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("Discription")
+                    b.Property<string>("Description")
                         .HasMaxLength(150)
                         .HasColumnType("nvarchar(150)");
 
@@ -59,7 +59,7 @@ namespace DAL.Migrations
                         {
                             Id = 1,
                             DateCreate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Discription = "Maffia",
+                            Description = "Maffia",
                             Name = "OPG#1"
                         });
                 });
@@ -114,7 +114,7 @@ namespace DAL.Migrations
                         new
                         {
                             Id = 1,
-                            BirthDay = new DateTime(2024, 4, 17, 13, 44, 12, 157, DateTimeKind.Utc).AddTicks(6483),
+                            BirthDay = new DateTime(2024, 4, 19, 7, 34, 53, 138, DateTimeKind.Utc).AddTicks(8988),
                             DivisionId = 1,
                             DriverLicense = true,
                             FirstName = "Валерий",
@@ -125,7 +125,7 @@ namespace DAL.Migrations
                         new
                         {
                             Id = 2,
-                            BirthDay = new DateTime(2024, 4, 17, 13, 44, 12, 157, DateTimeKind.Utc).AddTicks(6485),
+                            BirthDay = new DateTime(2024, 4, 19, 7, 34, 53, 138, DateTimeKind.Utc).AddTicks(8991),
                             DivisionId = 1,
                             DriverLicense = true,
                             FirstName = "Михаил",

@@ -21,7 +21,7 @@ namespace DAL.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Name = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
                     DateCreate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    Discription = table.Column<string>(type: "nvarchar(150)", maxLength: 150, nullable: true),
+                    Description = table.Column<string>(type: "nvarchar(150)", maxLength: 150, nullable: true),
                     ParentDivisionId = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
@@ -46,7 +46,7 @@ namespace DAL.Migrations
                     BirthDay = table.Column<DateTime>(type: "datetime2", nullable: false),
                     Gender = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
                     Position = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
-                    DriverLicense = table.Column<int>(type: "int", nullable: true),
+                    DriverLicense = table.Column<bool>(type: "bit", nullable: true),
                     DivisionId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
@@ -62,7 +62,7 @@ namespace DAL.Migrations
 
             migrationBuilder.InsertData(
                 table: "Division",
-                columns: new[] { "Id", "DateCreate", "Discription", "Name", "ParentDivisionId" },
+                columns: new[] { "Id", "DateCreate", "Description", "Name", "ParentDivisionId" },
                 values: new object[] { 1, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "Maffia", "OPG#1", null });
 
             migrationBuilder.InsertData(
@@ -70,8 +70,8 @@ namespace DAL.Migrations
                 columns: new[] { "Id", "BirthDay", "DivisionId", "DriverLicense", "FirstName", "Gender", "LastName", "Position", "SecondName" },
                 values: new object[,]
                 {
-                    { 1, new DateTime(2024, 4, 17, 13, 38, 32, 447, DateTimeKind.Utc).AddTicks(9524), 1, 1, "Валерий", null, "Альбертович", "General", "Жмышенко" },
-                    { 2, new DateTime(2024, 4, 17, 13, 38, 32, 447, DateTimeKind.Utc).AddTicks(9528), 1, 1, "Михаил", null, "Петрович", "Maffiosnic", "Зубенко" }
+                    { 1, new DateTime(2024, 4, 19, 7, 34, 53, 138, DateTimeKind.Utc).AddTicks(8988), 1, true, "Валерий", null, "Альбертович", "General", "Жмышенко" },
+                    { 2, new DateTime(2024, 4, 19, 7, 34, 53, 138, DateTimeKind.Utc).AddTicks(8991), 1, true, "Михаил", null, "Петрович", "Maffiosnic", "Зубенко" }
                 });
 
             migrationBuilder.CreateIndex(

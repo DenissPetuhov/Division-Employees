@@ -3,6 +3,7 @@
     public enum ErrorCode
     {
         ExceptionService = 21,
-        DataNotFound = 22
+        DataNotFound = 22,
+        CyclicDependency = 23
     }
 }
