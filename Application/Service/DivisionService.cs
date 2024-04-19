@@ -12,12 +12,12 @@ namespace Application.Service
 {
     public class DivisionService : IDivisionService
     {
-        private readonly IBaseRepositories<Division> _divisionService;
+        private readonly IBaseRepositories<Division> _divisionRepository;
         private readonly IMapper _mapper;
 
         public DivisionService(IBaseRepositories<Division> divisionService, IMapper mapper)
         {
-            _divisionService = divisionService;
+            _divisionRepository = divisionService;
             _mapper = mapper;
         }
         public async Task<BaseResult<DivisionDto>> CreateDivisionAsync(CreateDivisionDto divisiondto)
@@ -27,7 +27,7 @@ namespace Application.Service
             {
                 var division = _mapper.Map<Division>(divisiondto);
                 division.DateCreate = DateTime.Now;
-                var responseDivision = await _divisionService.CreateAsync(division);
+                var responseDivision = await _divisionRepository.CreateAsync(division);
                 response.Data = _mapper.Map<DivisionDto>(responseDivision);
                 return response;
             }
@@ -45,14 +45,14 @@ namespace Application.Service
             var response = new BaseResult<DivisionDto>();
             try
             {
-                var data = await _divisionService.GetAll().FirstOrDefaultAsync(x => x.Id == divisionId);
+                var data = await _divisionRepository.GetAll().FirstOrDefaultAsync(x => x.Id == divisionId);
                 if (data is null)
                 {
                     response.ErrorCode = (int)ErrorCode.DataNotFound;
                     response.ErrorMessage = $"Отдел по заданному id={divisionId} не найден.";
                     return response;
                 }
-                var responsedata = await _divisionService.RemoveAsync(data);
+                var responsedata = await _divisionRepository.RemoveAsync(data);
                 response.Data = _mapper.Map<DivisionDto>(responsedata);
                 return response;
             }
@@ -70,7 +70,7 @@ namespace Application.Service
             var response = new CollectionResult<DivisionDto>();
             try
             {
-                var data = await _divisionService.GetAll()
+                var data = await _divisionRepository.GetAll()
                     .Select(x => _mapper.Map<DivisionDto>(x))
                     .ToArrayAsync();
                 if (data is null)
@@ -96,7 +96,7 @@ namespace Application.Service
             var response = new BaseResult<DivisionDto>();
             try
             {
-                var data = await _divisionService.GetAll()
+                var data = await _divisionRepository.GetAll()
                     .Select(x => _mapper.Map<DivisionDto>(x))
                     .FirstOrDefaultAsync(x => x.Id == divisionId);
                 if (data is null)
@@ -123,14 +123,14 @@ namespace Application.Service
             var response = new BaseResult<DivisionDto>();
             try
             {
-                var data = await _divisionService.GetAll().FirstOrDefaultAsync(x => x.Id == division.Id);
+                var data = await _divisionRepository.GetAll().FirstOrDefaultAsync(x => x.Id == division.Id);
                 if (data == null)
                 {
                     response.ErrorCode = (int)ErrorCode.DataNotFound;
                     response.ErrorMessage = $"Отдел по заданному id={division.Id} не найден";
                     return response;
                 }
-                var responsedata = await _divisionService.UpdateAsync(data);
+                var responsedata = await _divisionRepository.UpdateAsync(data);
                 response.Data = _mapper.Map<DivisionDto>(responsedata);
                 return response;
 
@@ -154,7 +154,7 @@ namespace Application.Service
                 //Зависимый отдел
                 Division? division;
                 //Вызов сущности зависимого отдела
-                division = _divisionService.GetAll().FirstOrDefault(x => x.Id == addParentDivisionDto.Id);
+                division = _divisionRepository.GetAll().FirstOrDefault(x => x.Id == addParentDivisionDto.Id);
                 if (division is null)
                 {
                     response.ErrorCode = (int)ErrorCode.DataNotFound;
@@ -162,7 +162,7 @@ namespace Application.Service
                     return response;
                 }
                 //Вызов сущности родительского отдела
-                parentDivision = _divisionService.GetAll().FirstOrDefault(x => x.Id == addParentDivisionDto.ParentDivisionId);
+                parentDivision = _divisionRepository.GetAll().FirstOrDefault(x => x.Id == addParentDivisionDto.ParentDivisionId);
                 if (parentDivision is null)
                 {
                     response.ErrorCode = (int)ErrorCode.DataNotFound;
@@ -176,7 +176,7 @@ namespace Application.Service
                     response.ErrorMessage = "Установть зависимость не возможно образуется циклическая зависимость";
                     return response;
                 }
-                response.Data =  _mapper.Map<DivisionDto>(await _divisionService.UpdateAsync(division));
+                response.Data =  _mapper.Map<DivisionDto>(await _divisionRepository.UpdateAsync(division));
                 return response;
             }
             catch (Exception ex)

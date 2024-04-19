@@ -11,14 +11,14 @@ namespace Application.Service
 {
     public class EmployeeService : IEmployeeService
     {
-        private readonly IBaseRepositories<Employee> _employeeService;
-        private readonly IBaseRepositories<Division> _divisionService;
+        private readonly IBaseRepositories<Employee> _employeeRepository;
+        private readonly IBaseRepositories<Division> _divisionRepository;
         private readonly IMapper _mapper;
 
-        public EmployeeService(IBaseRepositories<Employee> employeeService, IBaseRepositories<Division> divisionService, IMapper mapper)
+        public EmployeeService(IBaseRepositories<Employee> employeeRepository, IBaseRepositories<Division> divisionRepository, IMapper mapper)
         {
-            _employeeService = employeeService;
-            _divisionService = divisionService;
+            _employeeRepository = employeeRepository;
+            _divisionRepository = divisionRepository;
             _mapper = mapper;
         }
         public async Task<BaseResult<EmployeeDto>> GetEmployeeAsync(int employeeId)
@@ -26,7 +26,7 @@ namespace Application.Service
             var response = new BaseResult<EmployeeDto>();
             try
             {
-                var data = await _employeeService.GetAll()
+                var data = await _employeeRepository.GetAll()
                     .Select(x => _mapper.Map<EmployeeDto>(x))
                     .FirstOrDefaultAsync(x => x.Id == employeeId);
                 if (data is null)
@@ -52,7 +52,7 @@ namespace Application.Service
             var response = new CollectionResult<EmployeeDto>();
             try
             {
-                var data = await _employeeService.GetAll()
+                var data = await _employeeRepository.GetAll()
                     .Where(x => x.DivisionId == divisionId)
                     .Select(x => _mapper.Map<EmployeeDto>(x))
                     .ToArrayAsync();
@@ -80,7 +80,7 @@ namespace Application.Service
             var response = new BaseResult<EmployeeDto>();
             try
             {
-                var division = _divisionService.GetAll().FirstOrDefaultAsync(x => x.Id == employeeDto.divisionId);
+                var division = _divisionRepository.GetAll().FirstOrDefaultAsync(x => x.Id == employeeDto.divisionId);
                 if (division is null)
                 {
                     response.ErrorCode = (int)ErrorCode.DataNotFound;
@@ -89,7 +89,7 @@ namespace Application.Service
                 }
 
                 var employee = _mapper.Map<Employee>(employeeDto);
-                var responsedata = await _employeeService.CreateAsync(employee);
+                var responsedata = await _employeeRepository.CreateAsync(employee);
 
                 response.Data = _mapper.Map<EmployeeDto>(responsedata);
                 return response;
@@ -110,14 +110,14 @@ namespace Application.Service
             var response = new BaseResult<EmployeeDto>();
             try
             {
-                var data = await _employeeService.GetAll().FirstOrDefaultAsync(x => x.Id == employee.Id);
+                var data = await _employeeRepository.GetAll().FirstOrDefaultAsync(x => x.Id == employee.Id);
                 if (data is null)
                 {
                     response.ErrorCode = (int)ErrorCode.DataNotFound;
                     response.ErrorMessage = $"Сотрудник по заданному id={employee.Id} не найден.";
                     return response;
                 }
-                var responsedata = await _employeeService.UpdateAsync(data);
+                var responsedata = await _employeeRepository.UpdateAsync(data);
                 response.Data = _mapper.Map<EmployeeDto>(responsedata);
                 return response;
 
@@ -136,14 +136,14 @@ namespace Application.Service
             var response = new BaseResult<EmployeeDto>();
             try
             {
-                var data = await _employeeService.GetAll().FirstOrDefaultAsync(x => x.Id == employeeId);
+                var data = await _employeeRepository.GetAll().FirstOrDefaultAsync(x => x.Id == employeeId);
                 if (data is null)
                 {
                     response.ErrorCode = (int)ErrorCode.DataNotFound;
                     response.ErrorMessage = $"Сотрудник по заданному id={employeeId} не найден.";
                     return response;
                 }
-                var resposedata = await _employeeService.RemoveAsync(data);
+                var resposedata = await _employeeRepository.RemoveAsync(data);
                 response.Data = _mapper.Map<EmployeeDto>(resposedata);
                 return response;
             }
