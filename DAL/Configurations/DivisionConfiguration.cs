@@ -16,7 +16,10 @@ namespace Domain.Entity.Configurations
             builder.HasOne(x => x.ParentDivision)
                 .WithMany(x => x.Divisions)
                 .HasForeignKey(x => x.ParentDivisionId)
-                .OnDelete(DeleteBehavior.NoAction);
+                .OnDelete(DeleteBehavior.ClientSetNull);
+
+            builder.Navigation(x => x.Employees).AutoInclude();
+
 
             builder.HasData(
                 new Division()

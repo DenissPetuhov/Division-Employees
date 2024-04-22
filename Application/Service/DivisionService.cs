@@ -13,11 +13,13 @@ namespace Application.Service
     public class DivisionService : IDivisionService
     {
         private readonly IBaseRepositories<Division> _divisionRepository;
+        private readonly IBaseRepositories<Employee> _employeeRepository;
         private readonly IMapper _mapper;
 
-        public DivisionService(IBaseRepositories<Division> divisionService, IMapper mapper)
+        public DivisionService(IBaseRepositories<Division> divisionService, IBaseRepositories<Employee> employeeRepository, IMapper mapper)
         {
             _divisionRepository = divisionService;
+            _employeeRepository = employeeRepository;
             _mapper = mapper;
         }
         public async Task<BaseResult<DivisionDto>> CreateDivisionAsync(CreateDivisionDto divisiondto)
@@ -27,7 +29,7 @@ namespace Application.Service
             {
                 var division = _mapper.Map<Division>(divisiondto);
                 division.DateCreate = DateTime.Now;
-                var responseDivision = await _divisionRepository.CreateAsync(division);
+                var responseDivision = await _divisionRepository.CreateAsync(division, true);
                 response.Data = _mapper.Map<DivisionDto>(responseDivision);
                 return response;
             }
@@ -45,14 +47,26 @@ namespace Application.Service
             var response = new BaseResult<DivisionDto>();
             try
             {
-                var data = await _divisionRepository.GetAll().FirstOrDefaultAsync(x => x.Id == divisionId);
+                var data = await _divisionRepository.GetAll()
+                    .AsNoTracking()
+                    .Include(x => x.Divisions)
+                    .FirstOrDefaultAsync(x => x.Id == divisionId);
                 if (data is null)
                 {
                     response.ErrorCode = (int)ErrorCode.DataNotFound;
                     response.ErrorMessage = $"Отдел по заданному id={divisionId} не найден.";
                     return response;
                 }
-                var responsedata = await _divisionRepository.RemoveAsync(data);
+                foreach (var obj in data.Divisions)
+                {
+                    obj.ParentDivision = null;
+                    await _divisionRepository.UpdateAsync(obj,false);
+                }
+                foreach (var obj in data.Employees)
+                {
+                    await _employeeRepository.RemoveAsync(obj, false);
+                }
+                var responsedata = await _divisionRepository.RemoveAsync(data, true);
                 response.Data = _mapper.Map<DivisionDto>(responsedata);
                 return response;
             }
@@ -131,7 +145,7 @@ namespace Application.Service
                 }
                 data.Description = divisionDto.Description;
                 data.Name = divisionDto.Name;
-                var responsedata = await _divisionRepository.UpdateAsync(data);
+                var responsedata = await _divisionRepository.UpdateAsync(data, true);
                 response.Data = _mapper.Map<DivisionDto>(responsedata);
                 return response;
 
@@ -173,7 +187,7 @@ namespace Application.Service
                     return response;
                 }
                 division.ParentDivisionId = addParentDivisionDto.ParentDivisionId;
-                response.Data = _mapper.Map<DivisionDto>(await _divisionRepository.UpdateAsync(division));
+                response.Data = _mapper.Map<DivisionDto>(await _divisionRepository.UpdateAsync(division,true));
                 return response;
             }
             catch (Exception ex)

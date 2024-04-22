@@ -3,8 +3,9 @@
     public interface IBaseRepositories<TEntity>
     {
         IQueryable<TEntity> GetAll();
-        Task<TEntity> CreateAsync(TEntity entity);
-        Task<TEntity> UpdateAsync(TEntity entity);
-        Task<TEntity> RemoveAsync(TEntity entity);    
+        Task<TEntity> CreateAsync(TEntity entity,bool saveChanges);
+        Task<TEntity> UpdateAsync(TEntity entity, bool saveChanges);
+        Task<TEntity> RemoveAsync(TEntity entity, bool saveChanges);
+        void SaveChangesAsync();
     }
 }

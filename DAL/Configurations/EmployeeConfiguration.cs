@@ -25,7 +25,7 @@ namespace Domain.Entity.Configurations
                 .WithMany(x => x.Employees)
                 .HasForeignKey(x => x.DivisionId)
                 .IsRequired();
-
+          
             builder.HasData(
                 new Employee()
                 {

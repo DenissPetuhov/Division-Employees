@@ -6,6 +6,7 @@ using Domain.Interface.Repositories;
 using Domain.Interface.Services;
 using Domain.Result;
 using Microsoft.EntityFrameworkCore;
+using System.Data;
 
 namespace Application.Service
 {
@@ -51,10 +52,18 @@ namespace Application.Service
             var response = new CollectionResult<EmployeeDto>();
             try
             {
+                var divisiondata = await _divisionRepository.GetAll().FirstOrDefaultAsync(x => x.Id == divisionId);
+                if (divisiondata == null)
+                {
+                    response.ErrorCode = (int)ErrorCode.DataNotFound;
+                    response.ErrorMessage = $"Отдел по заданному id={divisionId} не найден.";
+                    return response;
+                }
                 var data = await _employeeRepository.GetAll()
                     .Where(x => x.DivisionId == divisionId)
                     .Select(x => _mapper.Map<EmployeeDto>(x))
                     .ToArrayAsync();
+
                 if (data == null)
                 {
                     response.ErrorCode = (int)ErrorCode.DataNotFound;
@@ -88,8 +97,7 @@ namespace Application.Service
                 }
 
                 var employee = _mapper.Map<Employee>(employeeDto);
-                var responsedata = await _employeeRepository.CreateAsync(employee);
-
+                var responsedata = await _employeeRepository.CreateAsync(employee, true);
                 response.Data = _mapper.Map<EmployeeDto>(responsedata);
                 return response;
             }
@@ -116,8 +124,16 @@ namespace Application.Service
                     response.ErrorMessage = $"Сотрудник по заданному id={employee.Id} не найден.";
                     return response;
                 }
-                data = _mapper.Map<Employee>(employee);
-                var responsedata = await _employeeRepository.UpdateAsync(data);
+
+               
+                data.FirstName = employee.FirstName;
+                data.SecondName = employee.SecondName;
+                data.LastName = employee.LastName;
+                data.BirthDay = employee.BirthDay;
+                data.Position = employee.Position;
+                data.DriverLicense = employee.DriverLicense;
+                data.Gender = employee.Gender;
+                var responsedata = await _employeeRepository.UpdateAsync(data, true);
                 response.Data = _mapper.Map<EmployeeDto>(responsedata);
                 return response;
 
@@ -143,13 +159,13 @@ namespace Application.Service
                     response.ErrorMessage = $"Сотрудник по заданному id={employeeId} не найден.";
                     return response;
                 }
-                var resposedata = await _employeeRepository.RemoveAsync(data);
+            
+                var resposedata = await _employeeRepository.RemoveAsync(data, true);
                 response.Data = _mapper.Map<EmployeeDto>(resposedata);
                 return response;
             }
             catch (Exception ex)
             {
-
                 return new BaseResult<EmployeeDto>
                 {
                     ErrorCode = (int)ErrorCode.ExceptionService,
