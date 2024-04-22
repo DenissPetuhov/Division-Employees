@@ -19,6 +19,8 @@ namespace Application.Service
 
         public async Task StartAsync(CancellationToken cancellationToken)
         {
+            try
+            {
             using var scpe = _serviceProvider.CreateScope();
             var context = scpe.ServiceProvider.GetRequiredService<ApplicationDbContext>();
             _logger.LogInformation(message: "Start migration={@Migrations}",
@@ -28,7 +30,12 @@ namespace Application.Service
 
             _logger.LogInformation(message: "End migration={@Migrations}",
                 context.Database.GetPendingMigrations().ToList());
+            }
+            catch (Exception)
+            {
 
+                throw;
+            }
         }
 
         public Task StopAsync(CancellationToken cancellationToken) => Task.CompletedTask;

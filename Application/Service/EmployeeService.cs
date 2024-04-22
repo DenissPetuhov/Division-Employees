@@ -27,7 +27,6 @@ namespace Application.Service
             try
             {
                 var data = await _employeeRepository.GetAll()
-                    .Select(x => _mapper.Map<EmployeeDto>(x))
                     .FirstOrDefaultAsync(x => x.Id == employeeId);
                 if (data is null)
                 {
@@ -35,7 +34,7 @@ namespace Application.Service
                     response.ErrorMessage = $"Сотрудник по заданному id={employeeId} не найден.";
                     return response;
                 }
-                response.Data = data;
+                response.Data = _mapper.Map<EmployeeDto>(data);
                 return response;
             }
             catch (Exception ex)
@@ -56,7 +55,7 @@ namespace Application.Service
                     .Where(x => x.DivisionId == divisionId)
                     .Select(x => _mapper.Map<EmployeeDto>(x))
                     .ToArrayAsync();
-                if (data != null)
+                if (data == null)
                 {
                     response.ErrorCode = (int)ErrorCode.DataNotFound;
                     response.ErrorMessage = $"Сотрудники по заданному id={divisionId} отдела не найден.";
@@ -117,6 +116,7 @@ namespace Application.Service
                     response.ErrorMessage = $"Сотрудник по заданному id={employee.Id} не найден.";
                     return response;
                 }
+                data = _mapper.Map<Employee>(employee);
                 var responsedata = await _employeeRepository.UpdateAsync(data);
                 response.Data = _mapper.Map<EmployeeDto>(responsedata);
                 return response;

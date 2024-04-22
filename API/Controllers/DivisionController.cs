@@ -17,7 +17,7 @@ namespace API.Controllers
             _divisionService = divisionService;
         }
 
-        [HttpGet("get-division-by-id id={divisionId}")]
+        [HttpGet("get-by-id")]
         public async Task<ActionResult<BaseResult<Division>>> GetDivsionAsync(int divisionId)
         {
             var response = await _divisionService.GetDivisionAsync(divisionId);
@@ -34,8 +34,8 @@ namespace API.Controllers
 
             return BadRequest(response);
         }
-        [HttpGet("get-all-division")]
-        public async Task<ActionResult<CollectionResult<Division>>> GetAllDivision()
+        [HttpGet("get-all")]
+        public async Task<ActionResult<CollectionResult<Division>>> GetAllDivisionAsync()
         {
             var response = await _divisionService.GetAllDivisionsAsync();
             if (response.isSuccses) return Ok(response);
@@ -43,8 +43,8 @@ namespace API.Controllers
             return BadRequest(response);
         }
 
-        [HttpPost("create-division")]
-        public async Task<ActionResult<BaseResult>> CreateDivision(CreateDivisionDto divisionDto)
+        [HttpPost("create")]
+        public async Task<ActionResult<BaseResult>> CreateDivisionAsync(CreateDivisionDto divisionDto)
         {
             var response = await _divisionService.CreateDivisionAsync(divisionDto);
             if (response.isSuccses) return Ok(response);
@@ -52,8 +52,8 @@ namespace API.Controllers
             return BadRequest(response);
         }
 
-        [HttpPut("update-division")]
-        public async Task<ActionResult<BaseResult>> UpdateDivision(DivisionDto divisionDto)
+        [HttpPut("update")]
+        public async Task<ActionResult<BaseResult>> UpdateDivisionAsync(DivisionDto divisionDto)
         {
             var response = await _divisionService.UpdateDivisionAsync(divisionDto);
             if (response.isSuccses) return Ok(response);
@@ -61,8 +61,8 @@ namespace API.Controllers
             return BadRequest(response);
         }
 
-        [HttpDelete("delete-division-by-id={id}")]
-        public async Task<ActionResult<BaseResult>> DeleteDivision(int id)
+        [HttpDelete("delete-by-id")]
+        public async Task<ActionResult<BaseResult>> DeleteDivisionAsync(int id)
         {
             var response = await _divisionService.DeleteDivisionAsync(id);
             if (response.isSuccses) return Ok(response);

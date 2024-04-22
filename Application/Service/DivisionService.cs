@@ -97,7 +97,6 @@ namespace Application.Service
             try
             {
                 var data = await _divisionRepository.GetAll()
-                    .Select(x => _mapper.Map<DivisionDto>(x))
                     .FirstOrDefaultAsync(x => x.Id == divisionId);
                 if (data is null)
                 {
@@ -105,7 +104,7 @@ namespace Application.Service
                     response.ErrorMessage = $"Отдел по заданному id={divisionId} не найден.";
                     return response;
                 }
-                response.Data = data;
+                response.Data = _mapper.Map<DivisionDto>(data);
                 return response;
             }
             catch (Exception ex)
@@ -118,18 +117,20 @@ namespace Application.Service
                 };
             }
         }
-        public async Task<BaseResult<DivisionDto>> UpdateDivisionAsync(DivisionDto division)
+        public async Task<BaseResult<DivisionDto>> UpdateDivisionAsync(DivisionDto divisionDto)
         {
             var response = new BaseResult<DivisionDto>();
             try
             {
-                var data = await _divisionRepository.GetAll().FirstOrDefaultAsync(x => x.Id == division.Id);
+                var data = await _divisionRepository.GetAll().FirstOrDefaultAsync(x => x.Id == divisionDto.Id);
                 if (data == null)
                 {
                     response.ErrorCode = (int)ErrorCode.DataNotFound;
-                    response.ErrorMessage = $"Отдел по заданному id={division.Id} не найден";
+                    response.ErrorMessage = $"Отдел по заданному id={divisionDto.Id} не найден";
                     return response;
                 }
+                data.Description = divisionDto.Description;
+                data.Name = divisionDto.Name;
                 var responsedata = await _divisionRepository.UpdateAsync(data);
                 response.Data = _mapper.Map<DivisionDto>(responsedata);
                 return response;
@@ -149,11 +150,8 @@ namespace Application.Service
             try
             {
                 var response = new BaseResult<DivisionDto>();
-                //Родительский отдел
                 Division? parentDivision;
-                //Зависимый отдел
                 Division? division;
-                //Вызов сущности зависимого отдела
                 division = _divisionRepository.GetAll().FirstOrDefault(x => x.Id == addParentDivisionDto.Id);
                 if (division is null)
                 {
@@ -161,7 +159,6 @@ namespace Application.Service
                     response.ErrorMessage = $"Зависимый отдел по заданному id={addParentDivisionDto.Id} не найден.";
                     return response;
                 }
-                //Вызов сущности родительского отдела
                 parentDivision = _divisionRepository.GetAll().FirstOrDefault(x => x.Id == addParentDivisionDto.ParentDivisionId);
                 if (parentDivision is null)
                 {
@@ -169,14 +166,14 @@ namespace Application.Service
                     response.ErrorMessage = $"Родительски отдел по заданному id={addParentDivisionDto.Id} не найден.";
                     return response;
                 }
-                // Установка зависимости 
                 if (ChekingForChild(division, addParentDivisionDto.ParentDivisionId, new List<int>()))
                 {
                     response.ErrorCode = (int)ErrorCode.CyclicDependency;
                     response.ErrorMessage = "Установть зависимость не возможно образуется циклическая зависимость";
                     return response;
                 }
-                response.Data =  _mapper.Map<DivisionDto>(await _divisionRepository.UpdateAsync(division));
+                division.ParentDivisionId = addParentDivisionDto.ParentDivisionId;
+                response.Data = _mapper.Map<DivisionDto>(await _divisionRepository.UpdateAsync(division));
                 return response;
             }
             catch (Exception ex)
@@ -212,6 +209,6 @@ namespace Application.Service
 
 
         }
-   
+
     }
 }
