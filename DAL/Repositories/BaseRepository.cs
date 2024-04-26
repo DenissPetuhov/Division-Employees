@@ -1,4 +1,5 @@
 ﻿using Domain.Interface.Repositories;
+using Microsoft.EntityFrameworkCore;
 
 namespace DAL.Repositories
 {
@@ -22,9 +23,9 @@ namespace DAL.Repositories
             return entity;
         }
 
-        public IQueryable<TEntity> GetAll()
+        public IEnumerable<TEntity> GetAll()
         {
-            return _context.Set<TEntity>();
+            return _context.Set<TEntity>().ToList();
 
         }
 
@@ -54,5 +55,7 @@ namespace DAL.Repositories
             if (saveChanges) await _context.SaveChangesAsync();
             return entity;
         }
+
+
     }
 }

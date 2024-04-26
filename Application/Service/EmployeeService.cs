@@ -27,8 +27,9 @@ namespace Application.Service
             var response = new BaseResult<EmployeeDto>();
             try
             {
-                var data = await _employeeRepository.GetAll()
-                    .FirstOrDefaultAsync(x => x.Id == employeeId);
+                var data =  _employeeRepository.GetAll()
+                    .ToList()
+                    .FirstOrDefault(x => x.Id == employeeId);
                 if (data is null)
                 {
                     response.ErrorCode = (int)ErrorCode.DataNotFound;
@@ -52,17 +53,19 @@ namespace Application.Service
             var response = new CollectionResult<EmployeeDto>();
             try
             {
-                var divisiondata = await _divisionRepository.GetAll().FirstOrDefaultAsync(x => x.Id == divisionId);
+                var divisiondata = _divisionRepository.GetAll()
+                    .ToList()
+                    .FirstOrDefault(x => x.Id == divisionId);
                 if (divisiondata == null)
                 {
                     response.ErrorCode = (int)ErrorCode.DataNotFound;
                     response.ErrorMessage = $"Отдел по заданному id={divisionId} не найден.";
                     return response;
                 }
-                var data = await _employeeRepository.GetAll()
+                var data =  _employeeRepository.GetAll()
                     .Where(x => x.DivisionId == divisionId)
                     .Select(x => _mapper.Map<EmployeeDto>(x))
-                    .ToArrayAsync();
+                    .ToList();
 
                 if (data == null)
                 {
@@ -88,7 +91,9 @@ namespace Application.Service
             var response = new BaseResult<EmployeeDto>();
             try
             {
-                var division = _divisionRepository.GetAll().FirstOrDefaultAsync(x => x.Id == employeeDto.divisionId);
+                var division = _divisionRepository.GetAll()
+                    .ToList()
+                    .FirstOrDefault(x => x.Id == employeeDto.divisionId);
                 if (division is null)
                 {
                     response.ErrorCode = (int)ErrorCode.DataNotFound;
@@ -117,7 +122,9 @@ namespace Application.Service
             var response = new BaseResult<EmployeeDto>();
             try
             {
-                var data = await _employeeRepository.GetAll().FirstOrDefaultAsync(x => x.Id == employee.Id);
+                var data = _employeeRepository.GetAll()
+                    .ToList()
+                    .FirstOrDefault(x => x.Id == employee.Id);
                 if (data is null)
                 {
                     response.ErrorCode = (int)ErrorCode.DataNotFound;
@@ -152,7 +159,9 @@ namespace Application.Service
             var response = new BaseResult<EmployeeDto>();
             try
             {
-                var data = await _employeeRepository.GetAll().FirstOrDefaultAsync(x => x.Id == employeeId);
+                var data =  _employeeRepository.GetAll()
+                    .ToList()
+                    .FirstOrDefault(x => x.Id == employeeId);
                 if (data is null)
                 {
                     response.ErrorCode = (int)ErrorCode.DataNotFound;

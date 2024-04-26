@@ -111,7 +111,7 @@ namespace DAL.Migrations
                         new
                         {
                             Id = 1,
-                            BirthDay = new DateTime(2024, 4, 22, 17, 59, 47, 900, DateTimeKind.Utc).AddTicks(1293),
+                            BirthDay = new DateTime(2024, 4, 24, 7, 19, 58, 900, DateTimeKind.Utc).AddTicks(6843),
                             DivisionId = 1,
                             DriverLicense = true,
                             FirstName = "Валерий",
@@ -122,7 +122,7 @@ namespace DAL.Migrations
                         new
                         {
                             Id = 2,
-                            BirthDay = new DateTime(2024, 4, 22, 17, 59, 47, 900, DateTimeKind.Utc).AddTicks(1296),
+                            BirthDay = new DateTime(2024, 4, 24, 7, 19, 58, 900, DateTimeKind.Utc).AddTicks(6845),
                             DivisionId = 1,
                             DriverLicense = true,
                             FirstName = "Михаил",

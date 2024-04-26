@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DAL.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20240422172135_init")]
+    [Migration("20240424071959_init")]
     partial class init
     {
         /// <inheritdoc />
@@ -114,7 +114,7 @@ namespace DAL.Migrations
                         new
                         {
                             Id = 1,
-                            BirthDay = new DateTime(2024, 4, 22, 17, 21, 35, 273, DateTimeKind.Utc).AddTicks(5206),
+                            BirthDay = new DateTime(2024, 4, 24, 7, 19, 58, 900, DateTimeKind.Utc).AddTicks(6843),
                             DivisionId = 1,
                             DriverLicense = true,
                             FirstName = "Валерий",
@@ -125,7 +125,7 @@ namespace DAL.Migrations
                         new
                         {
                             Id = 2,
-                            BirthDay = new DateTime(2024, 4, 22, 17, 21, 35, 273, DateTimeKind.Utc).AddTicks(5208),
+                            BirthDay = new DateTime(2024, 4, 24, 7, 19, 58, 900, DateTimeKind.Utc).AddTicks(6845),
                             DivisionId = 1,
                             DriverLicense = true,
                             FirstName = "Михаил",
@@ -139,8 +139,7 @@ namespace DAL.Migrations
                 {
                     b.HasOne("Domain.Entity.Division", "ParentDivision")
                         .WithMany("Divisions")
-                        .HasForeignKey("ParentDivisionId")
-                        .OnDelete(DeleteBehavior.NoAction);
+                        .HasForeignKey("ParentDivisionId");
 
                     b.Navigation("ParentDivision");
                 });

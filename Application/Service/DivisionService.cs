@@ -47,10 +47,8 @@ namespace Application.Service
             var response = new BaseResult<DivisionDto>();
             try
             {
-                var data = await _divisionRepository.GetAll()
-                    .AsNoTracking()
-                    .Include(x => x.Divisions)
-                    .FirstOrDefaultAsync(x => x.Id == divisionId);
+                var data =  _divisionRepository.GetAll()
+                    .FirstOrDefault(x => x.Id == divisionId); 
                 if (data is null)
                 {
                     response.ErrorCode = (int)ErrorCode.DataNotFound;
@@ -60,7 +58,7 @@ namespace Application.Service
                 foreach (var obj in data.Divisions)
                 {
                     obj.ParentDivision = null;
-                    await _divisionRepository.UpdateAsync(obj,false);
+                    await _divisionRepository.UpdateAsync(obj, false);
                 }
                 foreach (var obj in data.Employees)
                 {
@@ -79,14 +77,15 @@ namespace Application.Service
                 };
             }
         }
-        public async Task<CollectionResult<DivisionDto>> GetAllDivisionsAsync()
+        public async Task<CollectionResult<DivisionDtoTree>> GetAllDivisionsAsync()
         {
-            var response = new CollectionResult<DivisionDto>();
+            var response = new CollectionResult<DivisionDtoTree>();
             try
             {
-                var data = await _divisionRepository.GetAll()
-                    .Select(x => _mapper.Map<DivisionDto>(x))
-                    .ToArrayAsync();
+                var data = _divisionRepository.GetAll()
+                    .Select(x => _mapper.Map<DivisionDtoTree>(x))
+                    .ToList()
+                    .Where(x => x.Divisions == null);
                 if (data is null)
                 {
                     response.ErrorCode = (int)ErrorCode.DataNotFound;
@@ -98,7 +97,7 @@ namespace Application.Service
             }
             catch (Exception ex)
             {
-                return new CollectionResult<DivisionDto>()
+                return new CollectionResult<DivisionDtoTree>()
                 {
                     ErrorCode = (int)ErrorCode.ExceptionService,
                     ErrorMessage = ex.Message
@@ -110,8 +109,8 @@ namespace Application.Service
             var response = new BaseResult<DivisionDto>();
             try
             {
-                var data = await _divisionRepository.GetAll()
-                    .FirstOrDefaultAsync(x => x.Id == divisionId);
+                var data =  _divisionRepository.GetAll()
+                    .FirstOrDefault(x => x.Id == divisionId);
                 if (data is null)
                 {
                     response.ErrorCode = (int)ErrorCode.DataNotFound;
@@ -136,7 +135,8 @@ namespace Application.Service
             var response = new BaseResult<DivisionDto>();
             try
             {
-                var data = await _divisionRepository.GetAll().FirstOrDefaultAsync(x => x.Id == divisionDto.Id);
+                var data = _divisionRepository.GetAll()
+                    .FirstOrDefault(x => x.Id == divisionDto.Id);
                 if (data == null)
                 {
                     response.ErrorCode = (int)ErrorCode.DataNotFound;
@@ -187,7 +187,7 @@ namespace Application.Service
                     return response;
                 }
                 division.ParentDivisionId = addParentDivisionDto.ParentDivisionId;
-                response.Data = _mapper.Map<DivisionDto>(await _divisionRepository.UpdateAsync(division,true));
+                response.Data = _mapper.Map<DivisionDto>(await _divisionRepository.UpdateAsync(division, true));
                 return response;
             }
             catch (Exception ex)

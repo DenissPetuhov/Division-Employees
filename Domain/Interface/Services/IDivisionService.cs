@@ -13,7 +13,7 @@ namespace Domain.Interface.Services
         /// <summary>
         /// Получить все отделы 
         /// </summary>
-        Task<CollectionResult<DivisionDto>> GetAllDivisionsAsync();
+        Task<CollectionResult<DivisionDtoTree>> GetAllDivisionsAsync();
         /// <summary>
         /// Создать отдел
         /// </summary>

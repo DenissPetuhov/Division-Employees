@@ -70,8 +70,8 @@ namespace DAL.Migrations
                 columns: new[] { "Id", "BirthDay", "DivisionId", "DriverLicense", "FirstName", "Gender", "LastName", "Position", "SecondName" },
                 values: new object[,]
                 {
-                    { 1, new DateTime(2024, 4, 22, 17, 21, 35, 273, DateTimeKind.Utc).AddTicks(5206), 1, true, "Валерий", null, "Альбертович", "General", "Жмышенко" },
-                    { 2, new DateTime(2024, 4, 22, 17, 21, 35, 273, DateTimeKind.Utc).AddTicks(5208), 1, true, "Михаил", null, "Петрович", "Maffiosnic", "Зубенко" }
+                    { 1, new DateTime(2024, 4, 24, 7, 19, 58, 900, DateTimeKind.Utc).AddTicks(6843), 1, true, "Валерий", null, "Альбертович", "General", "Жмышенко" },
+                    { 2, new DateTime(2024, 4, 24, 7, 19, 58, 900, DateTimeKind.Utc).AddTicks(6845), 1, true, "Михаил", null, "Петрович", "Maffiosnic", "Зубенко" }
                 });
 
             migrationBuilder.CreateIndex(
