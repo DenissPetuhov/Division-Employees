@@ -22,7 +22,6 @@ namespace DAL.Repositories
             await _context.AddAsync(entity);
             return entity;
         }
-
         public IEnumerable<TEntity> GetAll()
         {
             return _context.Set<TEntity>().ToList();
@@ -40,7 +39,6 @@ namespace DAL.Repositories
             if (saveChanges) await _context.SaveChangesAsync();
             return entity;
         }
-
         public async Task<TEntity> UpdateAsync(TEntity entity, bool saveChanges)
         {
             if (entity is null)
@@ -49,7 +47,6 @@ namespace DAL.Repositories
             if (saveChanges) await _context.SaveChangesAsync();
             return entity;
         }
-
         public async Task<TEntity> RemoveAsync(TEntity entity, bool saveChanges)
         {
             if (entity is null)
