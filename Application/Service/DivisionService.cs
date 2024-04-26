@@ -47,8 +47,8 @@ namespace Application.Service
             var response = new BaseResult<DivisionDto>();
             try
             {
-                var data =  _divisionRepository.GetAll()
-                    .FirstOrDefault(x => x.Id == divisionId); 
+                var data = _divisionRepository.GetAllQuaryble()
+                    .FirstOrDefault(x => x.Id == divisionId);
                 if (data is null)
                 {
                     response.ErrorCode = (int)ErrorCode.DataNotFound;
@@ -77,7 +77,7 @@ namespace Application.Service
                 };
             }
         }
-        public async Task<CollectionResult<DivisionDtoTree>> GetAllDivisionsAsync()
+        public CollectionResult<DivisionDtoTree> GetAllDivisions()
         {
             var response = new CollectionResult<DivisionDtoTree>();
             try
@@ -104,12 +104,12 @@ namespace Application.Service
                 };
             }
         }
-        public async Task<BaseResult<DivisionDto>> GetDivisionAsync(int divisionId)
+        public BaseResult<DivisionDto> GetDivision(int divisionId)
         {
             var response = new BaseResult<DivisionDto>();
             try
             {
-                var data =  _divisionRepository.GetAll()
+                var data =  _divisionRepository.GetAllQuaryble()
                     .FirstOrDefault(x => x.Id == divisionId);
                 if (data is null)
                 {
@@ -135,7 +135,7 @@ namespace Application.Service
             var response = new BaseResult<DivisionDto>();
             try
             {
-                var data = _divisionRepository.GetAll()
+                var data = _divisionRepository.GetAllQuaryble()
                     .FirstOrDefault(x => x.Id == divisionDto.Id);
                 if (data == null)
                 {
@@ -159,21 +159,21 @@ namespace Application.Service
                 };
             }
         }
-        public async Task<BaseResult<DivisionDto>> AddParentDivision(AddParentDivisionDto addParentDivisionDto)
+        public async Task<BaseResult<DivisionDto>> AddParentDivisionAsync(AddParentDivisionDto addParentDivisionDto)
         {
             try
             {
                 var response = new BaseResult<DivisionDto>();
                 Division? parentDivision;
                 Division? division;
-                division = _divisionRepository.GetAll().FirstOrDefault(x => x.Id == addParentDivisionDto.Id);
+                division = _divisionRepository.GetAllQuaryble().FirstOrDefault(x => x.Id == addParentDivisionDto.Id);
                 if (division is null)
                 {
                     response.ErrorCode = (int)ErrorCode.DataNotFound;
                     response.ErrorMessage = $"Зависимый отдел по заданному id={addParentDivisionDto.Id} не найден.";
                     return response;
                 }
-                parentDivision = _divisionRepository.GetAll().FirstOrDefault(x => x.Id == addParentDivisionDto.ParentDivisionId);
+                parentDivision = _divisionRepository.GetAllQuaryble().FirstOrDefault(x => x.Id == addParentDivisionDto.ParentDivisionId);
                 if (parentDivision is null)
                 {
                     response.ErrorCode = (int)ErrorCode.DataNotFound;

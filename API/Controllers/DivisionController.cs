@@ -20,7 +20,7 @@ namespace API.Controllers
         [HttpGet("get-by-id")]
         public async Task<ActionResult<BaseResult<Division>>> GetDivsionAsync(int divisionId)
         {
-            var response = await _divisionService.GetDivisionAsync(divisionId);
+            var response =  _divisionService.GetDivision(divisionId);
             if (response.isSuccses) return Ok(response);
 
             return BadRequest(response);
@@ -29,7 +29,7 @@ namespace API.Controllers
         [HttpPost("add-parent-division")]
         public async Task<ActionResult<BaseResult>> AddParentDivisionAsync(AddParentDivisionDto divisionDto)
         {
-            var response = await _divisionService.AddParentDivision(divisionDto);
+            var response = await _divisionService.AddParentDivisionAsync(divisionDto);
             if (response.isSuccses) return Ok(response);
 
             return BadRequest(response);
@@ -37,7 +37,7 @@ namespace API.Controllers
         [HttpGet("get-all")]
         public async Task<ActionResult<CollectionResult<Division>>> GetAllDivisionAsync()
         {
-            var response = await _divisionService.GetAllDivisionsAsync();
+            var response =  _divisionService.GetAllDivisions();
             if (response.isSuccses) return Ok(response);
 
             return BadRequest(response);

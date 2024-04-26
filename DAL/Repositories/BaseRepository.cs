@@ -28,7 +28,10 @@ namespace DAL.Repositories
             return _context.Set<TEntity>().ToList();
 
         }
-
+        public IQueryable<TEntity> GetAllQuaryble()
+        {
+            return _context.Set<TEntity>();
+        }
         public async Task<TEntity> CreateAsync(TEntity entity, bool saveChanges)
         {
             if (entity is null)
@@ -56,6 +59,6 @@ namespace DAL.Repositories
             return entity;
         }
 
-
+     
     }
 }

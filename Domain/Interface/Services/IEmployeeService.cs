@@ -9,11 +9,11 @@ namespace Domain.Interface.Services
         /// <summary>
         /// Получение работника по id
         /// </summary>
-        Task<BaseResult<EmployeeDto>> GetEmployeeAsync(int employeeId);
+        BaseResult<EmployeeDto> GetEmployee(int employeeId);
         /// <summary>
         /// Получение всех рабоников по id отдела
         /// </summary>
-        Task<CollectionResult<EmployeeDto>> GetEmployeesByDvisionIdAsync(int divisioniD);
+        CollectionResult<EmployeeDto> GetEmployeesByDvisionId(int divisioniD);
         /// <summary>
         /// Создание работника 
         /// </summary>

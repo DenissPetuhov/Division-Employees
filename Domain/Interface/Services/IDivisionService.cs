@@ -9,11 +9,11 @@ namespace Domain.Interface.Services
         /// <summary>
         /// Получить отдел по id
         /// </summary>
-        Task<BaseResult<DivisionDto>> GetDivisionAsync(int divisionId);
+        BaseResult<DivisionDto> GetDivision(int divisionId);
         /// <summary>
         /// Получить все отделы 
         /// </summary>
-        Task<CollectionResult<DivisionDtoTree>> GetAllDivisionsAsync();
+        CollectionResult<DivisionDtoTree> GetAllDivisions();
         /// <summary>
         /// Создать отдел
         /// </summary>
@@ -29,7 +29,7 @@ namespace Domain.Interface.Services
         /// <summary>
         /// Установить связь отделов
         /// </summary>
-        Task<BaseResult<DivisionDto>> AddParentDivision(AddParentDivisionDto addParentDivisionDto);
+        Task<BaseResult<DivisionDto>> AddParentDivisionAsync(AddParentDivisionDto addParentDivisionDto);
 
     }
 }
