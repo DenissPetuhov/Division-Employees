@@ -92,6 +92,7 @@ namespace Application.Service
                     response.ErrorMessage = "Отделы не найдены";
                     return response;
                 }
+                
                 response.Data = data;
                 return response;
             }
