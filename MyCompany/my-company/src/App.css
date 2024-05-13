@@ -1,0 +1,11 @@
+@import url('./reset.css');
+
+ul {
+  padding-left: 16px;
+}
+
+.root {
+  display: flex;
+  flex-direction: row;
+
+}

@@ -16,47 +16,47 @@ namespace API.Controllers
             _employeeService = employeeService;
         }
 
-        [HttpGet("get-by-id")]
-        public async Task<ActionResult<BaseResult<Employee>>> GetEmployeeByIdAsync(int employeeId)
+        [HttpGet("{id}")]
+        public ActionResult<BaseResult<Employee>> GetEmployeeById(int id)
         {
-            var response = await _employeeService.GetEmployeeAsync(employeeId);
-            if (response.isSuccses) return Ok(response);
+            var response =  _employeeService.GetEmployee(id);
+            if (response.isSuccess) return Ok(response);
 
             return BadRequest(response);
         }
 
-        [HttpGet("get-by-divisionId")]
-        public async Task<ActionResult<CollectionResult<Employee>>> GetEmployeesByDivisionIdAsync(int divisionId)
+        [HttpGet]
+        public ActionResult<CollectionResult<Employee>> GetEmployeesByDivisionId(int id)
         {
-            var response = await _employeeService.GetEmployeesByDvisionIdAsync(divisionId);
-            if (response.isSuccses) return Ok(response);
+            var response =  _employeeService.GetEmployeesByDvisionId(id);
+            if (response.isSuccess) return Ok(response);
 
             return BadRequest(response);
         }
 
-        [HttpPut("update")]
+        [HttpPut]
         public async Task<ActionResult<BaseResult>> UpdateEmployeeAsync(EmployeeDto employee)
         {
             var response = await _employeeService.UpdateEmployeeAsync(employee);
-            if (response.isSuccses) return Ok(response);
+            if (response.isSuccess) return Ok(response);
 
             return BadRequest(response);
         }
 
-        [HttpPost("create")]
+        [HttpPost]
         public async Task<ActionResult<BaseResult>> CreateEmployeeAsync(CreateEmployeeDto employee)
         {
             var response = await _employeeService.CreateEmployeeAsync(employee);
-            if (response.isSuccses) return Ok(response);
+            if (response.isSuccess) return Ok(response);
 
             return BadRequest(response);
         }
 
-        [HttpDelete("delete")]
+        [HttpDelete]
         public async Task<ActionResult<BaseResult>> DeleteEmployeeAsync(int id)
         {
             var response = await _employeeService.DeleteEmployeeAsync(id);
-            if (response.isSuccses) return Ok(response);
+            if (response.isSuccess) return Ok(response);
 
             return BadRequest(response);
         }

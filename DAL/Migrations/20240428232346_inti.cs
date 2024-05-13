@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace DAL.Migrations
 {
     /// <inheritdoc />
-    public partial class init : Migration
+    public partial class inti : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -70,8 +70,8 @@ namespace DAL.Migrations
                 columns: new[] { "Id", "BirthDay", "DivisionId", "DriverLicense", "FirstName", "Gender", "LastName", "Position", "SecondName" },
                 values: new object[,]
                 {
-                    { 1, new DateTime(2024, 4, 24, 7, 19, 58, 900, DateTimeKind.Utc).AddTicks(6843), 1, true, "Валерий", null, "Альбертович", "General", "Жмышенко" },
-                    { 2, new DateTime(2024, 4, 24, 7, 19, 58, 900, DateTimeKind.Utc).AddTicks(6845), 1, true, "Михаил", null, "Петрович", "Maffiosnic", "Зубенко" }
+                    { 1, new DateTime(2024, 4, 28, 23, 23, 45, 910, DateTimeKind.Utc).AddTicks(5267), 1, true, "Валерий", null, "Альбертович", "General", "Жмышенко" },
+                    { 2, new DateTime(2024, 4, 28, 23, 23, 45, 910, DateTimeKind.Utc).AddTicks(5270), 1, true, "Михаил", null, "Петрович", "Maffiosnic", "Зубенко" }
                 });
 
             migrationBuilder.CreateIndex(

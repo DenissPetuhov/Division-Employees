@@ -5,7 +5,6 @@ using Domain.Enums;
 using Domain.Interface.Repositories;
 using Domain.Interface.Services;
 using Domain.Result;
-using Microsoft.EntityFrameworkCore;
 using System.Data;
 
 namespace Application.Service
@@ -22,7 +21,7 @@ namespace Application.Service
             _divisionRepository = divisionRepository;
             _mapper = mapper;
         }
-        public async Task<BaseResult<EmployeeDto>> GetEmployeeAsync(int employeeId)
+        public BaseResult<EmployeeDto> GetEmployee(int employeeId)
         {
             var response = new BaseResult<EmployeeDto>();
             try
@@ -48,13 +47,12 @@ namespace Application.Service
                 };
             }
         }
-        public async Task<CollectionResult<EmployeeDto>> GetEmployeesByDvisionIdAsync(int divisionId)
+        public CollectionResult<EmployeeDto> GetEmployeesByDvisionId(int divisionId)
         {
             var response = new CollectionResult<EmployeeDto>();
             try
             {
-                var divisiondata = _divisionRepository.GetAll()
-                    .ToList()
+                var divisiondata = _divisionRepository.GetAllQuaryble()
                     .FirstOrDefault(x => x.Id == divisionId);
                 if (divisiondata == null)
                 {
@@ -91,8 +89,7 @@ namespace Application.Service
             var response = new BaseResult<EmployeeDto>();
             try
             {
-                var division = _divisionRepository.GetAll()
-                    .ToList()
+                var division = _divisionRepository.GetAllQuaryble()
                     .FirstOrDefault(x => x.Id == employeeDto.divisionId);
                 if (division is null)
                 {
@@ -122,8 +119,7 @@ namespace Application.Service
             var response = new BaseResult<EmployeeDto>();
             try
             {
-                var data = _employeeRepository.GetAll()
-                    .ToList()
+                var data = _employeeRepository.GetAllQuaryble()
                     .FirstOrDefault(x => x.Id == employee.Id);
                 if (data is null)
                 {
@@ -131,8 +127,6 @@ namespace Application.Service
                     response.ErrorMessage = $"Сотрудник по заданному id={employee.Id} не найден.";
                     return response;
                 }
-
-               
                 data.FirstName = employee.FirstName;
                 data.SecondName = employee.SecondName;
                 data.LastName = employee.LastName;
@@ -159,8 +153,7 @@ namespace Application.Service
             var response = new BaseResult<EmployeeDto>();
             try
             {
-                var data =  _employeeRepository.GetAll()
-                    .ToList()
+                var data =  _employeeRepository.GetAllQuaryble()
                     .FirstOrDefault(x => x.Id == employeeId);
                 if (data is null)
                 {
@@ -183,7 +176,5 @@ namespace Application.Service
             }
 
         }
-
-
     }
 }

@@ -5,8 +5,8 @@ using Domain.Enums;
 using Domain.Interface.Repositories;
 using Domain.Interface.Services;
 using Domain.Result;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+
 
 namespace Application.Service
 {
@@ -83,16 +83,15 @@ namespace Application.Service
             try
             {
                 var data = _divisionRepository.GetAll()
-                    .Select(x => _mapper.Map<DivisionDtoTree>(x))
-                    .ToList()
-                    .Where(x => x.Divisions == null);
+                    .Where(x => x.ParentDivisionId == null)
+                    .Select(x => _mapper.Map<DivisionDtoTree>(x));
+
                 if (data is null)
                 {
                     response.ErrorCode = (int)ErrorCode.DataNotFound;
                     response.ErrorMessage = "Отделы не найдены";
                     return response;
                 }
-                
                 response.Data = data;
                 return response;
             }
@@ -110,7 +109,7 @@ namespace Application.Service
             var response = new BaseResult<DivisionDto>();
             try
             {
-                var data =  _divisionRepository.GetAllQuaryble()
+                var data = _divisionRepository.GetAllQuaryble()
                     .FirstOrDefault(x => x.Id == divisionId);
                 if (data is null)
                 {
@@ -144,12 +143,18 @@ namespace Application.Service
                     response.ErrorMessage = $"Отдел по заданному id={divisionDto.Id} не найден";
                     return response;
                 }
+                if (divisionDto.ParentDivisionId.HasValue)
+                {
+                    var checkShildResponse = ChekingForChild(data, divisionDto.ParentDivisionId.Value);
+                    if (!checkShildResponse.isSuccess)
+                        return checkShildResponse;
+                }
                 data.Description = divisionDto.Description;
                 data.Name = divisionDto.Name;
+                data.ParentDivisionId = divisionDto.ParentDivisionId;
                 var responsedata = await _divisionRepository.UpdateAsync(data, true);
                 response.Data = _mapper.Map<DivisionDto>(responsedata);
                 return response;
-
             }
             catch (Exception ex)
             {
@@ -160,46 +165,72 @@ namespace Application.Service
                 };
             }
         }
-        public async Task<BaseResult<DivisionDto>> AddParentDivisionAsync(AddParentDivisionDto addParentDivisionDto)
+        public CollectionResult<DivisionDtoTree> GetAllFlatDivisions(int? checkDivisionId)
         {
+            var response = new CollectionResult<DivisionDtoTree>();
             try
             {
-                var response = new BaseResult<DivisionDto>();
-                Division? parentDivision;
-                Division? division;
-                division = _divisionRepository.GetAllQuaryble().FirstOrDefault(x => x.Id == addParentDivisionDto.Id);
-                if (division is null)
+                var data = _divisionRepository.GetAllQuaryble()
+                    .Select(x => _mapper.Map<DivisionDtoTree>(x))
+                    .ToList();
+
+                var parentlist = new List<int>();
+                if(checkDivisionId is not null)
                 {
-                    response.ErrorCode = (int)ErrorCode.DataNotFound;
-                    response.ErrorMessage = $"Зависимый отдел по заданному id={addParentDivisionDto.Id} не найден.";
-                    return response;
+                    var checkDivision = data.FirstOrDefault(x => x.Id == checkDivisionId);
+                    parentlist = GetChildList(checkDivision.Id);
                 }
-                parentDivision = _divisionRepository.GetAllQuaryble().FirstOrDefault(x => x.Id == addParentDivisionDto.ParentDivisionId);
-                if (parentDivision is null)
-                {
-                    response.ErrorCode = (int)ErrorCode.DataNotFound;
-                    response.ErrorMessage = $"Родительски отдел по заданному id={addParentDivisionDto.Id} не найден.";
-                    return response;
-                }
-                if (ChekingForChild(division, addParentDivisionDto.ParentDivisionId, new List<int>()))
-                {
-                    response.ErrorCode = (int)ErrorCode.CyclicDependency;
-                    response.ErrorMessage = "Установть зависимость не возможно образуется циклическая зависимость";
-                    return response;
-                }
-                division.ParentDivisionId = addParentDivisionDto.ParentDivisionId;
-                response.Data = _mapper.Map<DivisionDto>(await _divisionRepository.UpdateAsync(division, true));
+                response.Data = data.Where(x => !parentlist.Contains(x.Id) && x.Id != checkDivisionId);
                 return response;
             }
             catch (Exception ex)
             {
-                return new BaseResult<DivisionDto>
+                return new CollectionResult<DivisionDtoTree>()
                 {
                     ErrorCode = (int)ErrorCode.ExceptionService,
                     ErrorMessage = ex.Message
                 };
             }
         }
+
+        //private async Task<BaseResult<DivisionDto>> AddParentDivisionAsync(AddParentDivisionDto addParentDivisionDto)
+        //{
+        //    try
+        //    {
+        //        var response = new BaseResult<DivisionDto>();
+        //        Division? parentDivision;
+        //        Division? division;
+        //        division = _divisionRepository.GetAllQuaryble().FirstOrDefault(x => x.Id == addParentDivisionDto.Id);
+        //        if (division is null)
+        //        {
+        //            response.ErrorCode = (int)ErrorCode.DataNotFound;
+        //            response.ErrorMessage = $"Зависимый отдел по заданному id={addParentDivisionDto.Id} не найден.";
+        //            return response;
+        //        }
+        //        parentDivision = _divisionRepository.GetAllQuaryble().FirstOrDefault(x => x.Id == addParentDivisionDto.ParentDivisionId);
+        //        if (parentDivision is null)
+        //        {
+        //            response.ErrorCode = (int)ErrorCode.DataNotFound;
+        //            response.ErrorMessage = $"Родительски отдел по заданному id={addParentDivisionDto.Id} не найден.";
+        //            return response;
+        //        }
+        //        var checkShildResponse = ChekingForChild(division, addParentDivisionDto.ParentDivisionId, new List<int>());
+        //        if (checkShildResponse.isSuccess)
+        //            return checkShildResponse;
+
+        //        division.ParentDivisionId = addParentDivisionDto.ParentDivisionId;
+        //        response.Data = _mapper.Map<DivisionDto>(await _divisionRepository.UpdateAsync(division, true));
+        //        return response;
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        return new BaseResult<DivisionDto>
+        //        {
+        //            ErrorCode = (int)ErrorCode.ExceptionService,
+        //            ErrorMessage = ex.Message
+        //        };
+        //    }
+        //}
 
         /// <summary>
         /// Проверка у изменяемого объекта явяется ли устанавлеваемый его ребёнком
@@ -208,21 +239,40 @@ namespace Application.Service
         /// <param name="idChildDivision">Id ребенка который проверяем</param>
         /// <param name="idlist">Ссылка на список для записи</param>
         /// <returns>true если у детей найден это ид, false если ид не найден </returns>
-        private bool ChekingForChild(Division CheckDivision, int idChildDivision, List<int> idlist)
+        private BaseResult<DivisionDto> ChekingForChild(Division CheckDivision, int idChildDivision, List<int> idlist = null)
         {
-            if (!CheckDivision.Divisions.IsNullOrEmpty())
+            idlist ??= new List<int>();
+            if (!CheckDivision.ParentDivisionId.HasValue)
+                return new BaseResult<DivisionDto>();
+            else
             {
-                foreach (var child in CheckDivision.Divisions)
-                {
-                    idlist.Add(child.Id);
-                    ChekingForChild(child, idChildDivision, idlist);
-                }
+                idlist.Add(CheckDivision.ParentDivisionId.Value);
+                var parent = _divisionRepository.GetAllQuaryble()
+                    .FirstOrDefault(x => x.Id == CheckDivision.ParentDivisionId);
+
+                ChekingForChild(parent, idChildDivision, idlist);
                 if (idlist.Contains(idChildDivision))
-                    return true;
+                    return new BaseResult<DivisionDto>()
+                    {
+                        ErrorCode = (int)ErrorCode.CyclicDependency,
+                        ErrorMessage = "Установить зависимость не возможно образуется циклическая зависимость",
+                    };
             }
-            return false;
 
-
+            return new BaseResult<DivisionDto>();
+        }
+        private List<int> GetChildList(int currentid, List<int> idlist = null)
+        {
+            idlist ??= new List<int>();
+            var data = _divisionRepository.GetAll().FirstOrDefault(x => x.Id == currentid);
+            if (data.Divisions.IsNullOrEmpty())
+                return idlist;
+            foreach (var child in data.Divisions)
+            {
+                idlist.Add(child.Id);
+                idlist.AddRange(GetChildList(child.Id));
+            }
+            return idlist;
         }
 
     }

@@ -1,0 +1,11 @@
+.menu {
+  min-height: 800px;
+  height: 100%;
+  padding: 8px 16px;
+  background-color: #487eb8;
+}
+
+.addDivisionButton {
+  display: flex;
+
+}

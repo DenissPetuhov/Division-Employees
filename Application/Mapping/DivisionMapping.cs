@@ -9,6 +9,7 @@ namespace Application.Mapping
         public DivisionMapping()
         {
             CreateMap<Division, DivisionDto>().ReverseMap();
+            CreateMap<Division, DivisionDtoTree>().ReverseMap();
             CreateMap<Division, CreateDivisionDto>().ReverseMap();
             CreateMap<Division, AddParentDivisionDto>().ReverseMap();
         }

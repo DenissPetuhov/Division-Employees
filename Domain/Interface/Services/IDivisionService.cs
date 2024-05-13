@@ -1,5 +1,4 @@
 ﻿using Domain.Dto;
-using Domain.Entity;
 using Domain.Result;
 
 namespace Domain.Interface.Services
@@ -11,7 +10,7 @@ namespace Domain.Interface.Services
         /// </summary>
         BaseResult<DivisionDto> GetDivision(int divisionId);
         /// <summary>
-        /// Получить все отделы 
+        /// Получить дерево всех отделов 
         /// </summary>
         CollectionResult<DivisionDtoTree> GetAllDivisions();
         /// <summary>
@@ -27,9 +26,9 @@ namespace Domain.Interface.Services
         /// </summary>
         Task<BaseResult<DivisionDto>> DeleteDivisionAsync(int divisionId);
         /// <summary>
-        /// Установить связь отделов
+        /// Получить плоский список отделов
         /// </summary>
-        Task<BaseResult<DivisionDto>> AddParentDivisionAsync(AddParentDivisionDto addParentDivisionDto);
+        CollectionResult<DivisionDtoTree> GetAllFlatDivisions(int? checkDivisonId);
 
     }
 }

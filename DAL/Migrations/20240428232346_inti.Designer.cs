@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DAL.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20240424071959_init")]
-    partial class init
+    [Migration("20240428232346_inti")]
+    partial class inti
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -114,7 +114,7 @@ namespace DAL.Migrations
                         new
                         {
                             Id = 1,
-                            BirthDay = new DateTime(2024, 4, 24, 7, 19, 58, 900, DateTimeKind.Utc).AddTicks(6843),
+                            BirthDay = new DateTime(2024, 4, 28, 23, 23, 45, 910, DateTimeKind.Utc).AddTicks(5267),
                             DivisionId = 1,
                             DriverLicense = true,
                             FirstName = "Валерий",
@@ -125,7 +125,7 @@ namespace DAL.Migrations
                         new
                         {
                             Id = 2,
-                            BirthDay = new DateTime(2024, 4, 24, 7, 19, 58, 900, DateTimeKind.Utc).AddTicks(6845),
+                            BirthDay = new DateTime(2024, 4, 28, 23, 23, 45, 910, DateTimeKind.Utc).AddTicks(5270),
                             DivisionId = 1,
                             DriverLicense = true,
                             FirstName = "Михаил",

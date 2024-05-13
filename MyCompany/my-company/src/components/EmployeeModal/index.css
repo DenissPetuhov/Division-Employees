@@ -1,0 +1,9 @@
+.inputlist {
+  flex-direction: column;
+  display: flex;
+}
+
+.inputListElem {
+  min-width: 200px;
+  margin: 5px 0px;
+}

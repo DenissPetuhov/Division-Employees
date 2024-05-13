@@ -1,0 +1,18 @@
+.listItem {
+  list-style: none;
+}
+
+.menuItem {
+  display: flex;
+  flex-direction: row;
+}
+
+.treeSymbol {
+  height: 21px;
+  width: 16px;
+}
+
+.icongroup {
+  display: flex;
+  flex-direction: row;
+}

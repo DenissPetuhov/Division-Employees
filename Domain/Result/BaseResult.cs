@@ -2,7 +2,7 @@
 {
     public class BaseResult
     {
-        public bool isSuccses => ErrorMessage == null;
+        public bool isSuccess => ErrorMessage == null;
         public string? ErrorMessage { get; set; }
         public int? ErrorCode { get; set; }
 
