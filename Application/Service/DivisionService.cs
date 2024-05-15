@@ -193,45 +193,6 @@ namespace Application.Service
             }
         }
 
-        //private async Task<BaseResult<DivisionDto>> AddParentDivisionAsync(AddParentDivisionDto addParentDivisionDto)
-        //{
-        //    try
-        //    {
-        //        var response = new BaseResult<DivisionDto>();
-        //        Division? parentDivision;
-        //        Division? division;
-        //        division = _divisionRepository.GetAllQuaryble().FirstOrDefault(x => x.Id == addParentDivisionDto.Id);
-        //        if (division is null)
-        //        {
-        //            response.ErrorCode = (int)ErrorCode.DataNotFound;
-        //            response.ErrorMessage = $"Зависимый отдел по заданному id={addParentDivisionDto.Id} не найден.";
-        //            return response;
-        //        }
-        //        parentDivision = _divisionRepository.GetAllQuaryble().FirstOrDefault(x => x.Id == addParentDivisionDto.ParentDivisionId);
-        //        if (parentDivision is null)
-        //        {
-        //            response.ErrorCode = (int)ErrorCode.DataNotFound;
-        //            response.ErrorMessage = $"Родительски отдел по заданному id={addParentDivisionDto.Id} не найден.";
-        //            return response;
-        //        }
-        //        var checkShildResponse = ChekingForChild(division, addParentDivisionDto.ParentDivisionId, new List<int>());
-        //        if (checkShildResponse.isSuccess)
-        //            return checkShildResponse;
-
-        //        division.ParentDivisionId = addParentDivisionDto.ParentDivisionId;
-        //        response.Data = _mapper.Map<DivisionDto>(await _divisionRepository.UpdateAsync(division, true));
-        //        return response;
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        return new BaseResult<DivisionDto>
-        //        {
-        //            ErrorCode = (int)ErrorCode.ExceptionService,
-        //            ErrorMessage = ex.Message
-        //        };
-        //    }
-        //}
-
         /// <summary>
         /// Проверка у изменяемого объекта явяется ли устанавлеваемый его ребёнком
         /// </summary>
@@ -255,12 +216,15 @@ namespace Application.Service
                     return new BaseResult<DivisionDto>()
                     {
                         ErrorCode = (int)ErrorCode.CyclicDependency,
-                        ErrorMessage = "Установить зависимость не возможно образуется циклическая зависимость",
+                        ErrorMessage = "Установить не возможно образуется циклическая зависимость",
                     };
             }
 
             return new BaseResult<DivisionDto>();
         }
+        /// <summary>
+        /// Получить список всех id детей отдела
+        /// </summary>
         private List<int> GetChildList(int currentid, List<int> idlist = null)
         {
             idlist ??= new List<int>();
