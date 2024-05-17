@@ -62,9 +62,8 @@ namespace Application.Service
                 }
                 var data = _employeeRepository.GetAll()
                     .Where(x => x.DivisionId == divisionId)
-                    .Select(x => _mapper.Map<EmployeeDto>(x))
+                    .Select(_mapper.Map<EmployeeDto>)
                     .ToList();
-
                 if (data == null)
                 {
                     response.ErrorCode = (int)ErrorCode.DataNotFound;
@@ -105,14 +104,12 @@ namespace Application.Service
             }
             catch (Exception ex)
             {
-
                 return new BaseResult<EmployeeDto>
                 {
                     ErrorCode = (int)ErrorCode.ExceptionService,
                     ErrorMessage = ex.Message,
                 };
             }
-
         }
         public async Task<BaseResult<EmployeeDto>> UpdateEmployeeAsync(EmployeeDto employee)
         {
