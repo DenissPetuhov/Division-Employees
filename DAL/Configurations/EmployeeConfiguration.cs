@@ -7,7 +7,6 @@ namespace Domain.Entity.Configurations
     {
         public void Configure(EntityTypeBuilder<Employee> builder)
         {
-
             builder.HasKey(x => x.Id);
             builder.Property(x => x.Id).ValueGeneratedOnAdd();
             builder.Property(x => x.FirstName).HasMaxLength(50)
@@ -29,7 +28,6 @@ namespace Domain.Entity.Configurations
             builder.HasData(
                 new Employee()
                 {
-             
                     Id = 1,
                     FirstName = "Валерий",
                     SecondName = "Жмышенко",
@@ -52,8 +50,6 @@ namespace Domain.Entity.Configurations
                     DivisionId = 1
 
                 });
-
-
         }
     }
 }

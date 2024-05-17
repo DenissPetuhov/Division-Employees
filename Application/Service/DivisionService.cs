@@ -47,7 +47,7 @@ namespace Application.Service
             var response = new BaseResult<DivisionDto>();
             try
             {
-                var data = _divisionRepository.GetAllQuaryble()
+                var data = _divisionRepository.GetAll()
                     .FirstOrDefault(x => x.Id == divisionId);
                 if (data is null)
                 {
@@ -85,7 +85,6 @@ namespace Application.Service
                 var data = _divisionRepository.GetAll()
                     .Where(x => x.ParentDivisionId == null)
                     .Select(x => _mapper.Map<DivisionDtoTree>(x));
-
                 if (data is null)
                 {
                     response.ErrorCode = (int)ErrorCode.DataNotFound;
@@ -109,7 +108,7 @@ namespace Application.Service
             var response = new BaseResult<DivisionDto>();
             try
             {
-                var data = _divisionRepository.GetAllQuaryble()
+                var data = _divisionRepository.GetAll()
                     .FirstOrDefault(x => x.Id == divisionId);
                 if (data is null)
                 {
@@ -135,7 +134,7 @@ namespace Application.Service
             var response = new BaseResult<DivisionDto>();
             try
             {
-                var data = _divisionRepository.GetAllQuaryble()
+                var data = _divisionRepository.GetAll()
                     .FirstOrDefault(x => x.Id == divisionDto.Id);
                 if (data == null)
                 {
@@ -170,12 +169,11 @@ namespace Application.Service
             var response = new CollectionResult<DivisionDtoTree>();
             try
             {
-                var data = _divisionRepository.GetAllQuaryble()
+                var data = _divisionRepository.GetAll()
                     .Select(x => _mapper.Map<DivisionDtoTree>(x))
                     .ToList();
-
                 var parentlist = new List<int>();
-                if(checkDivisionId is not null)
+                if (checkDivisionId is not null)
                 {
                     var checkDivision = data.FirstOrDefault(x => x.Id == checkDivisionId);
                     parentlist = GetChildList(checkDivision.Id);
@@ -208,7 +206,7 @@ namespace Application.Service
             else
             {
                 idlist.Add(CheckDivision.ParentDivisionId.Value);
-                var parent = _divisionRepository.GetAllQuaryble()
+                var parent = _divisionRepository.GetAll()
                     .FirstOrDefault(x => x.Id == CheckDivision.ParentDivisionId);
 
                 ChekingForChild(parent, idChildDivision, idlist);
@@ -219,7 +217,6 @@ namespace Application.Service
                         ErrorMessage = "Установить не возможно образуется циклическая зависимость",
                     };
             }
-
             return new BaseResult<DivisionDto>();
         }
         /// <summary>
@@ -238,6 +235,5 @@ namespace Application.Service
             }
             return idlist;
         }
-
     }
 }

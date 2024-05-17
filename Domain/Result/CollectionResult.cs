@@ -1,7 +1,4 @@
 ﻿namespace Domain.Result
 {
-    public class CollectionResult<T> : BaseResult<IEnumerable<T>>
-    {
-
-    }
+    public class CollectionResult<T> : BaseResult<IEnumerable<T>> { }
 }

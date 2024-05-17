@@ -6,6 +6,4 @@ namespace Domain.Dto
     public record class DivisionDtoTree(int Id, string Name, string? Description, int? ParentDivisionId, ICollection<DivisionDtoTree> Divisions );
     public record class CreateDivisionDto(string Name, string? Description, int? ParentDivisionId);
     public record class AddParentDivisionDto(int Id, int ParentDivisionId);
-
-
 }

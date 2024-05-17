@@ -16,7 +16,6 @@ namespace API.Controllers
         {
             _divisionService = divisionService;
         }
-
         [HttpGet("{id}")]
         public ActionResult<BaseResult<Division>> Get(int id)
         {
@@ -31,7 +30,6 @@ namespace API.Controllers
             if (response.isSuccess) return Ok(response);
             return BadRequest(response);
         }
-
         [HttpPost]
         public async Task<ActionResult<BaseResult>> CreateDivisionAsync(CreateDivisionDto divisionDto)
         {
@@ -39,7 +37,6 @@ namespace API.Controllers
             if (response.isSuccess) return Ok(response);
             return BadRequest(response);
         }
-
         [HttpPut]
         public async Task<ActionResult<BaseResult>> UpdateDivisionAsync(DivisionDto divisionDto)
         {
@@ -47,7 +44,6 @@ namespace API.Controllers
             if (response.isSuccess) return Ok(response);
             return BadRequest(response);
         }
-
         [HttpDelete]
         public async Task<ActionResult<BaseResult>> DeleteDivisionAsync(int id)
         {
@@ -62,7 +58,5 @@ namespace API.Controllers
             if (response.isSuccess) return Ok(response);
             return BadRequest(response);
         }
-
-
     }
 }

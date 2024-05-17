@@ -26,7 +26,7 @@ namespace Application.Service
             var response = new BaseResult<EmployeeDto>();
             try
             {
-                var data =  _employeeRepository.GetAll()
+                var data = _employeeRepository.GetAll()
                     .ToList()
                     .FirstOrDefault(x => x.Id == employeeId);
                 if (data is null)
@@ -52,7 +52,7 @@ namespace Application.Service
             var response = new CollectionResult<EmployeeDto>();
             try
             {
-                var divisiondata = _divisionRepository.GetAllQuaryble()
+                var divisiondata = _divisionRepository.GetAll()
                     .FirstOrDefault(x => x.Id == divisionId);
                 if (divisiondata == null)
                 {
@@ -60,7 +60,7 @@ namespace Application.Service
                     response.ErrorMessage = $"Отдел по заданному id={divisionId} не найден.";
                     return response;
                 }
-                var data =  _employeeRepository.GetAll()
+                var data = _employeeRepository.GetAll()
                     .Where(x => x.DivisionId == divisionId)
                     .Select(x => _mapper.Map<EmployeeDto>(x))
                     .ToList();
@@ -89,7 +89,7 @@ namespace Application.Service
             var response = new BaseResult<EmployeeDto>();
             try
             {
-                var division = _divisionRepository.GetAllQuaryble()
+                var division = _divisionRepository.GetAll()
                     .FirstOrDefault(x => x.Id == employeeDto.divisionId);
                 if (division is null)
                 {
@@ -119,7 +119,7 @@ namespace Application.Service
             var response = new BaseResult<EmployeeDto>();
             try
             {
-                var data = _employeeRepository.GetAllQuaryble()
+                var data = _employeeRepository.GetAll()
                     .FirstOrDefault(x => x.Id == employee.Id);
                 if (data is null)
                 {
@@ -153,7 +153,7 @@ namespace Application.Service
             var response = new BaseResult<EmployeeDto>();
             try
             {
-                var data =  _employeeRepository.GetAllQuaryble()
+                var data = _employeeRepository.GetAll()
                     .FirstOrDefault(x => x.Id == employeeId);
                 if (data is null)
                 {
@@ -161,7 +161,6 @@ namespace Application.Service
                     response.ErrorMessage = $"Сотрудник по заданному id={employeeId} не найден.";
                     return response;
                 }
-            
                 var resposedata = await _employeeRepository.RemoveAsync(data, true);
                 response.Data = _mapper.Map<EmployeeDto>(resposedata);
                 return response;
@@ -174,7 +173,6 @@ namespace Application.Service
                     ErrorMessage = ex.Message
                 };
             }
-
         }
     }
 }

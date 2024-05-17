@@ -20,7 +20,6 @@ namespace Domain.Entity.Configurations
 
             builder.Navigation(x => x.Employees).AutoInclude();
 
-
             builder.HasData(
                 new Division()
                 {
@@ -28,7 +27,6 @@ namespace Domain.Entity.Configurations
                     Name = "OPG#1",
                     Description = "Maffia"
                 });
-
         }
     }
 }

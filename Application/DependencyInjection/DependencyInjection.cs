@@ -17,10 +17,7 @@ namespace DAL.DependencyInjection
             services.AddScoped<IDivisionService, DivisionService>();
             services.AddHostedService<MigrationsHostedService>();
             services.AddAutoMapper(typeof(DivisionMapping), typeof(EmployeeMapping));
-
         }
-
-
     }
 }
 

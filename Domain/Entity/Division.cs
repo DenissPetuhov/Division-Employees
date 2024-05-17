@@ -8,7 +8,7 @@
         public string? Description { get; set; }
         public int? ParentDivisionId { get; set; }
         public Division? ParentDivision { get; set; }
-        public List<Division>? Divisions { get; set; } = new List<Division> { };
+        public List<Division>? Divisions { get; set; } = new List<Division>();
         public ICollection<Employee>? Employees { get; set; } = new List<Employee>();
 
     }

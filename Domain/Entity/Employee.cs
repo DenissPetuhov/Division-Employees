@@ -11,7 +11,7 @@
         public string? Position { get; set; }
         public bool? DriverLicense { get; set; }
         public int DivisionId { get; set; }
-        public Division Division { get; set; }
+        public Division? Division { get; set; }
 
     }
 }

@@ -15,17 +15,13 @@ namespace DAL.DependencyInjection
             services.AddDbContext<ApplicationDbContext>(options =>
             {
                 options.UseSqlServer("Server=localhost;Database=MyCompany;Trusted_Connection=True;Trust Server Certificate=true;", b => b.MigrationsAssembly("DAL"));
-
             });
-            
             services.InitRepositories();
-
         }
         private static void InitRepositories(this IServiceCollection services)
         {
             services.AddScoped<IBaseRepositories<Division>, BaseRepository<Division>>();
             services.AddScoped<IBaseRepositories<Employee>, BaseRepository<Employee>>();
-
         }
     }
 }

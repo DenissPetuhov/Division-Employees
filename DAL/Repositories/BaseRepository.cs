@@ -11,9 +11,9 @@ namespace DAL.Repositories
         {
             _context = context;
         }
-        public async void SaveChangesAsync()
+        public void SaveChangesAsync()
         {
-            await _context.SaveChangesAsync();
+             _context.SaveChangesAsync();
         }
         public async Task<TEntity> CreateAsync(TEntity entity)
         {
@@ -22,15 +22,7 @@ namespace DAL.Repositories
             await _context.AddAsync(entity);
             return entity;
         }
-        public IEnumerable<TEntity> GetAll()
-        {
-            return _context.Set<TEntity>().ToList();
-
-        }
-        public IQueryable<TEntity> GetAllQuaryble()
-        {
-            return _context.Set<TEntity>();
-        }
+        public IEnumerable<TEntity> GetAll() => _context.Set<TEntity>().ToList();
         public async Task<TEntity> CreateAsync(TEntity entity, bool saveChanges)
         {
             if (entity is null)
@@ -56,6 +48,5 @@ namespace DAL.Repositories
             return entity;
         }
 
-     
     }
 }

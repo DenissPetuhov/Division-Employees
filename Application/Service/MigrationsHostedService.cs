@@ -16,7 +16,6 @@ namespace Application.Service
             _serviceProvider = serviceProvider;
             _logger = logger;
         }
-
         public async Task StartAsync(CancellationToken cancellationToken)
         {
             try
@@ -37,7 +36,6 @@ namespace Application.Service
                 throw;
             }
         }
-
         public Task StopAsync(CancellationToken cancellationToken) => Task.CompletedTask;
 
     }

@@ -15,7 +15,6 @@ namespace API.Controllers
         {
             _employeeService = employeeService;
         }
-
         [HttpGet("{id}")]
         public ActionResult<BaseResult<Employee>> GetEmployeeById(int id)
         {
@@ -24,7 +23,6 @@ namespace API.Controllers
 
             return BadRequest(response);
         }
-
         [HttpGet]
         public ActionResult<CollectionResult<Employee>> GetEmployeesByDivisionId(int id)
         {

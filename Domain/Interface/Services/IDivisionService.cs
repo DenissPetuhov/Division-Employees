@@ -29,6 +29,5 @@ namespace Domain.Interface.Services
         /// Получить плоский список отделов
         /// </summary>
         CollectionResult<DivisionDtoTree> GetAllFlatDivisions(int? checkDivisonId);
-
     }
 }
