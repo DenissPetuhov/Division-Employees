@@ -14,7 +14,7 @@ namespace DAL.DependencyInjection
             var connectionString = configuration.GetConnectionString("SlqServer");
             services.AddDbContext<ApplicationDbContext>(options =>
             {
-                options.UseSqlServer("Server=localhost;Database=MyCompany;Trusted_Connection=True;Trust Server Certificate=true;", b => b.MigrationsAssembly("DAL"));
+                options.UseSqlServer(connectionString, b => b.MigrationsAssembly("DAL"));
             });
             services.InitRepositories();
         }

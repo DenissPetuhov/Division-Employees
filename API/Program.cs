@@ -1,6 +1,4 @@
 using DAL.DependencyInjection;
-using System.Text.Json.Serialization;
-using Newtonsoft.Json;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -34,8 +32,6 @@ app.UseAuthorization();
 app.MapControllers();
 app.UseCors(builder => builder.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod());
 app.UseCors(builder => builder.AllowAnyOrigin());
-
-
 
 app.Run();
 
